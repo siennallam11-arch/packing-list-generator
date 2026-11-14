@@ -1,6 +1,6 @@
-# packing-list-generator
+# Caboodle
 
-Tell it where you're going, when, and what you'll do there, answer a few quick
+The whole kit and caboodle, packed. Tell it where you're going, when, and what you'll do there, answer a few quick
 questions, and get a packing checklist you can tick off — and share with the
 people you're traveling with.
 

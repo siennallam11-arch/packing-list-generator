@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Packing List",
+  title: "Caboodle",
   description: "A packing list made for your trip",
 };
 
