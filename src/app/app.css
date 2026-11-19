@@ -32,6 +32,21 @@ a.cb-btn { display: inline-flex; }
 .logo b { font: 700 34px/1 var(--font-hand); }
 
 /* Home */
+.home { justify-content: center; align-items: center; gap: 40px; }
+.hero { display: grid; justify-items: center; text-align: center; gap: 14px; max-width: 520px; }
+.hero-logo { display: flex; align-items: center; gap: 12px; }
+.hero-logo h1 { margin: 0; font: 700 clamp(64px, 16vw, 104px)/0.9 var(--font-hand); letter-spacing: -0.01em; }
+.tagline { margin: 0; font: 700 26px/1.1 var(--font-hand); color: var(--pen); }
+.hero-text { margin: 8px 0 0; font: 400 15px/1.6 var(--font-type); }
+.hero-why { margin: 0; font: 400 18px/1.3 var(--font-hand); color: var(--ink-soft); }
+.hero .cb-btn { margin-top: 10px; padding-inline: 28px; }
+.home-trips { width: 100%; max-width: 520px; display: grid; gap: 8px; }
+.home-trip { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); border: 1px solid var(--rule); border-radius: var(--radius-md); padding: 10px 14px; }
+.home-trip:hover { border-color: var(--leader); }
+.home-trip .swatch { width: 34px; height: 34px; flex: none; border-radius: var(--radius-sm); }
+.home-trip .grow { display: grid; gap: 2px; }
+.home-trip b { font: 700 21px/1 var(--font-hand); }
+.past-trip { color: var(--ink-soft); }
 .trips { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); }
 .trip-card { display: grid; text-decoration: none; color: var(--ink); border: 1px solid var(--rule); border-radius: var(--radius-md); overflow: hidden; background: var(--paper); }
 .trip-card:hover { border-color: var(--leader); }
@@ -84,6 +99,9 @@ a.cb-btn { display: inline-flex; }
 .dots span { flex: 1; height: 6px; border-radius: var(--radius-pill); border: 1.2px solid var(--ink); }
 .dots .done { background: var(--matcha); }
 .dots .here { background: var(--strawberry); }
+.quiz-nav { display: flex; justify-content: space-between; align-items: center; }
+.arrow { width: 48px; height: 48px; border-radius: var(--radius-pill); border: 1.6px solid var(--ink); background: var(--paper); color: var(--ink); font: 700 20px/1 var(--font-type); cursor: pointer; display: grid; place-items: center; }
+.arrow:disabled { opacity: 0.3; cursor: default; }
 .cb-quiz { max-width: none; }
 .cb-opt { min-height: 48px; }
 
@@ -117,8 +135,19 @@ a.cb-btn { display: inline-flex; }
 }
 .change p { margin: 0; }
 .toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: space-between; }
-.groups { display: grid; gap: 22px 36px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); align-items: start; }
-.group { display: grid; gap: 2px; border-top: 1px solid var(--rule); padding-top: 10px; }
+.trip-layout { display: grid; gap: 22px; }
+.trip-aside { display: grid; gap: 18px; align-content: start; min-width: 0; }
+.trip-aside .stops { grid-template-columns: 1fr; }
+.groups { display: grid; gap: 22px; min-width: 0; }
+.group { display: grid; gap: 2px; border-top: 1px solid var(--rule); padding-top: 10px; break-inside: avoid; }
+.cover-swatch { flex: 1; padding: 6px; min-width: 0; }
+@media (min-width: 960px) {
+  /* Computer: trip details in a column on the left, the list in two columns on the right. */
+  .trip-layout { grid-template-columns: 300px minmax(0, 1fr); gap: 48px; align-items: start; }
+  .trip-aside { position: sticky; top: 20px; }
+  .groups { display: block; columns: 2; column-gap: 40px; }
+  .groups .group { margin-bottom: 26px; }
+}
 .item-row { display: flex; align-items: center; gap: 6px; }
 .item-row .cb-item { flex: 1; min-height: 40px; }
 .why-btn { background: none; border: 1.2px dashed var(--leader); border-radius: var(--radius-pill); width: 28px; height: 28px; font: 700 12px/1 var(--font-type); color: var(--ink-soft); cursor: pointer; flex: none; }

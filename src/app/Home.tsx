@@ -1,22 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { use, useState } from "react";
+import { use } from "react";
 import { browser } from "react-dom";
 import { Doodle } from "@/components/Doodle";
 import { Paint } from "@/components/Paint";
 import { fmtMonth, fmtRange, tripTitle, untilText } from "@/lib/format";
-import { daysBetween, formatTripLength, tripDates, tripLength } from "@/lib/packing/trip";
+import { daysBetween, tripDates } from "@/lib/packing/trip";
 import { packedCount } from "@/lib/store/ops";
 import { loadTrips, todayIso } from "@/lib/store/storage";
 
 export function Home() {
   use(browser("Your trips are saved in this browser."));
-  const router = useRouter();
-  const [where, setWhere] = useState("");
   const today = todayIso();
-
   const trips = loadTrips()
     .filter((t) => t.stops.length > 0)
     .map((t) => ({ trip: t, ...tripDates(t.stops) }))
@@ -24,79 +20,50 @@ export function Home() {
   const upcoming = trips.filter((t) => daysBetween(today, t.endDate) >= 0);
   const past = trips.filter((t) => daysBetween(today, t.endDate) < 0).reverse();
 
-  function start(e: React.FormEvent) {
-    e.preventDefault();
-    const q = where.trim();
-    router.push(q ? `/new?q=${encodeURIComponent(q)}` : "/new");
-  }
-
   return (
-    <main className="page page--wide">
-      <span className="logo">
-        <b>caboodle</b>
-        <Doodle name="suitcase" size={36} />
-      </span>
-
-      <form className="stack" onSubmit={start} style={{ maxWidth: 520 }}>
-        <label htmlFor="where" className="h1">Where are you off to?</label>
-        <input className="cb-input" id="where" value={where} onChange={(e) => setWhere(e.target.value)} placeholder="Type a city, like Tokyo" autoComplete="off" />
-        <button type="submit" className="cb-btn" style={{ justifySelf: "start", marginTop: 4 }}>Start a trip</button>
-      </form>
-
-      <section className="stack" aria-labelledby="upcoming-h">
-        <span id="upcoming-h" className="cb-label">Coming up</span>
-        {upcoming.length === 0 ? (
-          <div className="empty">
-            <span className="hand-note" style={{ color: "var(--ink)" }}>No trips yet.</span>
-            <span className="cb-caption">Type a city above to start your first packing list.</span>
-          </div>
-        ) : (
-          <div className="trips">
-            {upcoming.map(({ trip, startDate, endDate }) => {
-              const { nights, days } = tripLength(startDate, endDate);
-              const packed = packedCount(trip);
-              const total = trip.items.length;
-              return (
-                <Link key={trip.id} href={`/trip?id=${trip.id}`} className="trip-card">
-                  <Paint colour={trip.cover} className="paint" />
-                  <div className="body">
-                    <div className="row" style={{ justifyContent: "space-between", alignItems: "baseline" }}>
-                      <span className="name">{tripTitle(trip.stops)}</span>
-                      <span className="cb-caption">{untilText(startDate, endDate, today)}</span>
-                    </div>
-                    <span className="cb-caption">{fmtRange(startDate, endDate)} · {formatTripLength(nights, days)}</span>
-                    <div className="cb-progress">
-                      <div className="cb-bar" style={{ height: 6 }}><i style={{ width: `${total ? (packed / total) * 100 : 0}%` }} /></div>
-                      <span className="cb-caption">{packed} of {total}</span>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        )}
+    <main className="page home">
+      <section className="hero">
+        <div className="hero-logo">
+          <h1>caboodle</h1>
+          <Doodle name="suitcase" size={72} />
+        </div>
+        <p className="tagline">packing, sorted.</p>
+        <p className="hero-text">
+          Tell Caboodle where you’re going, when, and what you’ll get up to. It checks the weather in every city and builds a packing list around your trip and the way you pack, so you can tick things off as they go in the bag.
+        </p>
+        <p className="hero-why">
+          I made Caboodle because packing always meant scattered notes, last-minute panic and a forgotten charger. I wanted one calm place to plan what to bring and stay organized, from the first idea of a trip to zipping up the suitcase.
+        </p>
+        <Link className="cb-btn" href="/new">Start a trip</Link>
       </section>
 
-      {past.length > 0 && (
-        <section className="stack" aria-labelledby="past-h" style={{ maxWidth: 520 }}>
-          <span id="past-h" className="cb-label">Past trips</span>
-          <div>
-            {past.map(({ trip, startDate }) => (
-              <Link key={trip.id} href={`/trip?id=${trip.id}`} className="past">
-                <b>{tripTitle(trip.stops)}</b>
-                <span className="cb-caption">{fmtMonth(startDate)}</span>
+      {(upcoming.length > 0 || past.length > 0) && (
+        <section className="home-trips" aria-label="Your trips">
+          {upcoming.length > 0 && <span className="cb-label">Your trips</span>}
+          {upcoming.map(({ trip, startDate, endDate }) => {
+            const packed = packedCount(trip);
+            const total = trip.items.length;
+            return (
+              <Link key={trip.id} href={`/trip?id=${trip.id}`} className="home-trip">
+                <Paint colour={trip.cover} className="swatch" />
+                <span className="grow">
+                  <b>{tripTitle(trip.stops)}</b>
+                  <span className="cb-caption">{fmtRange(startDate, endDate)} · {untilText(startDate, endDate, today)}</span>
+                </span>
+                <span className="cb-caption">{packed}/{total}</span>
               </Link>
-            ))}
-          </div>
+            );
+          })}
+          {past.length > 0 && <span className="cb-label" style={{ marginTop: 12 }}>Past trips</span>}
+          {past.map(({ trip, startDate }) => (
+            <Link key={trip.id} href={`/trip?id=${trip.id}`} className="home-trip past-trip">
+              <Paint colour={trip.cover} className="swatch" />
+              <span className="grow"><b>{tripTitle(trip.stops)}</b></span>
+              <span className="cb-caption">{fmtMonth(startDate)}</span>
+            </Link>
+          ))}
         </section>
       )}
-
-      <footer className="stack" style={{ marginTop: "auto", maxWidth: 520 }}>
-        <p className="hand-note">the whole kit &amp; caboodle, packed.</p>
-        <span className="cb-caption">
-          Your trips are saved in this browser. To open one on another phone or computer, use “Copy backup link” on the trip. Add Caboodle to your home screen and it works without signal too.
-        </span>
-      </footer>
     </main>
   );
 }

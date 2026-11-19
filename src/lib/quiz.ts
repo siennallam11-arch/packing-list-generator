@@ -37,7 +37,6 @@ export const QUIZ: QuizQuestion[] = [
     ],
   },
   { key: "working", question: "Working on this trip?", doodle: "plug", options: yesNo },
-  { key: "international", question: "Leaving the country?", doodle: "passport", options: yesNo },
   { key: "carryOnOnly", question: "Carry-on only?", doodle: "backpack", options: yesNo },
 ];
 

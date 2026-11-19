@@ -43,7 +43,7 @@ for (const category of CATEGORY_ORDER) {
       r.shareable && "Shared",
       r.extraOnly && "Overpackers only",
       r.note,
-      r.carryOnNote && `Carry-on: ${r.carryOnNote.toLowerCase()}`,
+      r.travelNote && `Pink note: ${r.travelNote}`,
     ].filter(Boolean).join(" · ");
     lines.push(`| ${r.name} | ${when} | ${qtyText(r.qty)} | ${notes} |`);
   }

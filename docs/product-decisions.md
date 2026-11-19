@@ -56,5 +56,15 @@ A running log of what we decided and why. Newest at the bottom.
 - **Undo** after removing, adding, renaming or changing quantities.
 - **Backup links** that carry the whole trip, until sign-in exists.
 
+## Round 2 feedback (decided)
+- **Home is simple:** big centered "caboodle" with the logo, tagline "packing, sorted.", a short
+  description and why it was made, one "Start a trip" button, and your trips listed underneath.
+- **Quiz has ← → arrows** to go back and change an answer; tapping an answer still moves on.
+- **No "Leaving the country?" question:** the cities answer it.
+- **Checklist:** no "Tap things…" line, no "?" buttons; liquid toiletries show the 3.4 fl oz
+  carry-on limit in pink.
+- **On computers:** trip details in a column on the left, the list in two columns on the right.
+- **Cover colours** are shown as swatches only, with no names.
+
 ## Open questions
 - None right now.

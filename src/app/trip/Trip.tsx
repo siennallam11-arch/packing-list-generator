@@ -12,7 +12,7 @@ import { formatTripLength, tripDates, tripLength } from "@/lib/packing/trip";
 import { CATEGORY_LABELS, CATEGORY_ORDER, type Category } from "@/lib/packing/types";
 import { describeFacts } from "@/lib/places/facts";
 import { backupLink } from "@/lib/store/backup";
-import { refreshItems } from "@/lib/store/build";
+import { refreshItems, withLatestNotes } from "@/lib/store/build";
 import { learnFrom, suggestionsFor } from "@/lib/store/learning";
 import * as ops from "@/lib/store/ops";
 import { deleteTrip, getTrip, loadTrips, saveTrip, todayIso } from "@/lib/store/storage";
@@ -28,6 +28,7 @@ const CATEGORY_DOODLES: Record<Category, { name: DoodleName; fill: string }> = {
   gear: { name: "backpack", fill: "var(--fill-tan)" },
   extras: { name: "bottle", fill: "var(--fill-blue)" },
 };
+const COVER_NAMES: Record<CoverColour, string> = { strawberry: "Pink", matcha: "Green", hojicha: "Brown" };
 const SCRIBBLES = ["M2 5C30 1.5 70 7.5 116 3.5", "M2 4C34 7.5 66 1.5 104 5", "M2 5C40 2 80 7 112 4"];
 
 function Box() {
@@ -47,12 +48,14 @@ export function Trip() {
 function TripView({ id }: { id: string }) {
   use(browser("Trips are saved in this browser."));
   const router = useRouter();
-  const [trip, setTrip] = useState<SavedTrip | undefined>(() => getTrip(id));
+  const [trip, setTrip] = useState<SavedTrip | undefined>(() => {
+    const saved = getTrip(id);
+    return saved && withLatestNotes(saved);
+  });
   const latest = useRef(trip);
   const [toast, setToast] = useState<ToastData | null>(null);
   const [editing, setEditing] = useState(false);
   const [folded, setFolded] = useState<Partial<Record<Category, boolean>>>({});
-  const [whyOpen, setWhyOpen] = useState<Record<string, boolean>>({});
   const [adding, setAdding] = useState<Partial<Record<Category, string>>>({});
   const [menu, setMenu] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -150,7 +153,8 @@ function TripView({ id }: { id: string }) {
         <div className="badge"><Doodle name="suitcase" size={46} /></div>
       </div>
 
-      <main className="trip-wrap">
+      <main className="trip-wrap trip-layout">
+        <aside className="trip-aside">
         <div className="trip-head">
           <h1 className="cb-trip-title" style={{ fontSize: "clamp(36px, 7vw, 52px)" }}>{tripTitle(trip.stops)}</h1>
           <div className="cb-trip-meta">{fmtRange(startDate, endDate)} · {formatTripLength(nights, days)}</div>
@@ -197,11 +201,24 @@ function TripView({ id }: { id: string }) {
         </div>
 
         <div className="toolbar">
-          <span className="cb-caption">Tap things as they go in the bag.</span>
           <button type="button" className="cb-btn cb-btn--quiet" style={{ minHeight: 36, padding: "8px 12px" }} onClick={() => setEditing(!editing)} aria-pressed={editing}>
             {editing ? "Done editing" : "Edit list"}
           </button>
         </div>
+        {pastSuggestions.length > 0 && (
+          <div className="past-suggest">
+            <span className="cb-label">From your past trips</span>
+            {pastSuggestions.slice(0, 4).map((s) => (
+              <div key={s.name} className="row">
+                <span className="grow">{s.name}</span>
+                <button type="button" className="cb-claim" onClick={() => commit(ops.addItem(trip, s.name, s.category), `Added ${s.name}`)}>Add it</button>
+                <button type="button" className="cb-btn cb-btn--text" style={{ fontWeight: 400, fontSize: 12 }} onClick={() => commit(ops.dismissSuggestion(trip, s.name), undefined, false)}>No thanks</button>
+              </div>
+            ))}
+            <span className="hand-note">you added {pastSuggestions.length === 1 ? "this" : "these"} by hand on your last few trips.</span>
+          </div>
+        )}
+        </aside>
 
         <div className="groups">
           {groups.map(({ category, items }, gi) => {
@@ -246,14 +263,10 @@ function TripView({ id }: { id: string }) {
                                   </>
                                 )}
                               </button>
-                              {item.reasons.length > 0 && (
-                                <button type="button" className="why-btn" aria-expanded={!!whyOpen[item.key]} aria-label={`Why is ${item.name} on the list?`} onClick={() => setWhyOpen({ ...whyOpen, [item.key]: !whyOpen[item.key] })}>?</button>
-                              )}
                               {item.maybeNotNeeded && (
                                 <button type="button" className="icon-btn" aria-label={`Remove ${item.name}`} onClick={() => commit(ops.removeItem(trip, item.key), `Removed ${item.name}`)}>×</button>
                               )}
                             </div>
-                            {whyOpen[item.key] && <p className="cb-why">because: {item.reasons.map((r) => r.toLowerCase()).join(", ")}</p>}
                           </li>
                         ),
                       )}
@@ -270,19 +283,6 @@ function TripView({ id }: { id: string }) {
           })}
         </div>
 
-        {pastSuggestions.length > 0 && (
-          <div className="past-suggest">
-            <span className="cb-label">From your past trips</span>
-            {pastSuggestions.slice(0, 4).map((s) => (
-              <div key={s.name} className="row">
-                <span className="grow">{s.name}</span>
-                <button type="button" className="cb-claim" onClick={() => commit(ops.addItem(trip, s.name, s.category), `Added ${s.name}`)}>Add it</button>
-                <button type="button" className="cb-btn cb-btn--text" style={{ fontWeight: 400, fontSize: 12 }} onClick={() => commit(ops.dismissSuggestion(trip, s.name), undefined, false)}>No thanks</button>
-              </div>
-            ))}
-            <span className="hand-note">you added {pastSuggestions.length === 1 ? "this" : "these"} by hand on your last few trips.</span>
-          </div>
-        )}
       </main>
 
       {menu && (
@@ -293,12 +293,11 @@ function TripView({ id }: { id: string }) {
               <b>Trip options</b>
               <button type="button" className="cb-btn cb-btn--text" onClick={() => { setMenu(false); setConfirmDelete(false); setCopied(null); }}>Done</button>
             </div>
-            <span className="cb-label">Cover colour</span>
+            <span className="cb-label">Cover</span>
             <div className="row">
               {(["strawberry", "matcha", "hojicha"] as CoverColour[]).map((c) => (
-                <button key={c} type="button" className="cb-opt" aria-pressed={trip.cover === c} onClick={() => commit(ops.setCover(trip, c), undefined, false)} style={{ display: "grid", gap: 6, padding: 8, minWidth: 96 }}>
-                  <Paint colour={c} style={{ width: "100%", height: 28, display: "block" }} />
-                  <span className="cb-caption" style={{ color: "var(--ink)" }}>{c}</span>
+                <button key={c} type="button" className="cb-opt cover-swatch" aria-pressed={trip.cover === c} aria-label={`${COVER_NAMES[c]} cover`} onClick={() => commit(ops.setCover(trip, c), undefined, false)}>
+                  <Paint colour={c} style={{ width: "100%", height: 40, display: "block" }} />
                 </button>
               ))}
             </div>

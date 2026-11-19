@@ -38,8 +38,6 @@ export interface Rule {
   qty?: Quantity;
   /** Shown under the item name. */
   note?: string;
-  /** Shown instead of `note` when packing carry-on only. */
-  carryOnNote?: string;
   /** An airline/security rule worth knowing, shown on every trip ("Can't go in checked bags"). */
   travelNote?: string;
   /** Could be shared by a group (goes on the shared list on group trips). */
@@ -54,7 +52,7 @@ const act = (activity: Activity): Condition => ({ activity });
 const wx = (weather: WeatherTag): Condition => ({ weather });
 const quiz = (flag: QuizFlag): Condition => ({ quiz: flag });
 
-const TRAVEL_SIZE = "Travel size (100 ml or less)";
+const LIQUID = "3.4 fl oz or less in carry-ons";
 
 export const RULES: Rule[] = [
   // ── Documents ────────────────────────────────────────────────
@@ -103,23 +101,23 @@ export const RULES: Rule[] = [
 
   // ── Toiletries ───────────────────────────────────────────────
   { id: "toothbrush", name: "Toothbrush", category: "toiletries", when: [always] },
-  { id: "toothpaste", name: "Toothpaste", category: "toiletries", when: [always], carryOnNote: TRAVEL_SIZE, shareable: true },
-  { id: "deodorant", name: "Deodorant", category: "toiletries", when: [always] },
-  { id: "shampoo", name: "Shampoo & conditioner", category: "toiletries", when: [always], carryOnNote: TRAVEL_SIZE, shareable: true },
-  { id: "body-wash", name: "Body wash", category: "toiletries", when: [always], carryOnNote: TRAVEL_SIZE, shareable: true },
-  { id: "skincare", name: "Skincare", category: "toiletries", when: [always], carryOnNote: TRAVEL_SIZE },
+  { id: "toothpaste", name: "Toothpaste", category: "toiletries", when: [always], travelNote: LIQUID, shareable: true },
+  { id: "deodorant", name: "Deodorant", category: "toiletries", when: [always], travelNote: "Sticks are fine; gels and sprays 3.4 fl oz or less in carry-ons" },
+  { id: "shampoo", name: "Shampoo & conditioner", category: "toiletries", when: [always], travelNote: LIQUID, shareable: true },
+  { id: "body-wash", name: "Body wash", category: "toiletries", when: [always], travelNote: LIQUID, shareable: true },
+  { id: "skincare", name: "Skincare", category: "toiletries", when: [always], travelNote: LIQUID },
   { id: "hairbrush", name: "Hairbrush / comb", category: "toiletries", when: [always] },
   { id: "razor", name: "Razor", category: "toiletries", when: [always], travelNote: "Loose blades aren't allowed in carry-ons; cartridge razors are fine" },
   { id: "hairdryer", name: "Hairdryer", category: "toiletries", when: [always], note: "Skip it if your stay has one", shareable: true },
-  { id: "meds", name: "Medications", category: "toiletries", when: [always] },
+  { id: "meds", name: "Medications", category: "toiletries", when: [always], travelNote: "Liquid medicine can go over 3.4 fl oz: tell security" },
   { id: "painkillers", name: "Painkillers", category: "toiletries", when: [always], shareable: true },
-  { id: "glasses", name: "Glasses / contacts", category: "toiletries", when: [always], note: "If you wear them" },
-  { id: "sunscreen", name: "Sunscreen", category: "toiletries", when: [wx("warm"), act("beach"), act("pool"), act("skiing"), act("hiking")], carryOnNote: TRAVEL_SIZE, shareable: true },
-  { id: "after-sun", name: "After-sun lotion", category: "toiletries", when: [act("beach")], extraOnly: true, shareable: true },
+  { id: "glasses", name: "Glasses / contacts", category: "toiletries", when: [always], note: "If you wear them", travelNote: "Contact solution: 3.4 fl oz or less in carry-ons" },
+  { id: "sunscreen", name: "Sunscreen", category: "toiletries", when: [wx("warm"), act("beach"), act("pool"), act("skiing"), act("hiking")], travelNote: LIQUID, shareable: true },
+  { id: "after-sun", name: "After-sun lotion", category: "toiletries", when: [act("beach")], extraOnly: true, travelNote: LIQUID, shareable: true },
   { id: "lip-balm", name: "Lip balm", category: "toiletries", when: [wx("cold"), act("skiing")] },
-  { id: "bug-spray", name: "Bug spray", category: "toiletries", when: [act("hiking"), act("camping")], carryOnNote: TRAVEL_SIZE, shareable: true },
+  { id: "bug-spray", name: "Bug spray", category: "toiletries", when: [act("hiking"), act("camping")], travelNote: LIQUID, shareable: true },
   { id: "first-aid", name: "First aid kit", category: "toiletries", when: [act("hiking"), act("camping")], travelNote: "Scissors over 4 inches can't be carried on", shareable: true },
-  { id: "sanitizer", name: "Hand sanitizer", category: "toiletries", when: [always], extraOnly: true },
+  { id: "sanitizer", name: "Hand sanitizer", category: "toiletries", when: [always], extraOnly: true, travelNote: LIQUID },
 
   // ── Tech ─────────────────────────────────────────────────────
   { id: "phone-charger", name: "Phone charger", category: "tech", when: [always] },
