@@ -12,6 +12,10 @@ export interface SavedStop {
   countryCode?: string; // "JP"
   latitude: number;
   longitude: number;
+  /** IANA time zone, e.g. "Asia/Tokyo" (for the banner's local time) */
+  timezone?: string;
+  population?: number;
+  elevation?: number;
   startDate: string;
   endDate: string;
   /** Packing tags from the weather (or picked by hand if the weather service was down). */

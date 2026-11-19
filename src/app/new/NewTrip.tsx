@@ -13,7 +13,7 @@ import { isInternational } from "@/lib/places/facts";
 import { ACTIVITY_LABELS, ACTIVITY_ORDER, QUIZ } from "@/lib/quiz";
 import { buildItems, refreshItems } from "@/lib/store/build";
 import { learnFrom } from "@/lib/store/learning";
-import { getTrip, loadTrips, newTripId, saveTrip, todayIso } from "@/lib/store/storage";
+import { getTrip, loadHidden, loadTrips, newTripId, saveTrip, todayIso } from "@/lib/store/storage";
 import type { SavedStop, SavedTrip } from "@/lib/store/types";
 import { withWeather } from "@/lib/store/weather";
 import { searchPlaces, type Place } from "@/lib/weather/openMeteo";
@@ -27,6 +27,9 @@ interface Draft {
   countryCode?: string;
   latitude: number;
   longitude: number;
+  timezone?: string;
+  population?: number;
+  elevation?: number;
   startDate?: string;
   endDate?: string;
   existing?: SavedStop;
@@ -110,6 +113,9 @@ function NewTripFlow({ params }: { params: URLSearchParams }) {
       countryCode: p.countryCode,
       latitude: p.latitude,
       longitude: p.longitude,
+      timezone: p.timezone,
+      population: p.population,
+      elevation: p.elevation,
     };
     const prev = drafts[drafts.length - 1];
     if (prev?.endDate) draft.startDate = prev.endDate; // next city usually starts where the last one ends
@@ -159,6 +165,9 @@ function NewTripFlow({ params }: { params: URLSearchParams }) {
           countryCode: d.countryCode,
           latitude: d.latitude,
           longitude: d.longitude,
+          timezone: d.timezone,
+          population: d.population,
+          elevation: d.elevation,
           startDate: d.startDate as string,
           endDate: d.endDate as string,
           weather: [],
@@ -173,13 +182,14 @@ function NewTripFlow({ params }: { params: URLSearchParams }) {
       }),
     );
     const now = new Date().toISOString();
+    const hidden = new Set(loadHidden().map((h) => h.ruleId));
     let trip: SavedTrip;
     if (editing) {
-      trip = refreshItems({ ...editing, activities, quiz }, stops, now);
+      trip = refreshItems({ ...editing, activities, quiz }, stops, now, hidden);
       if (trip.change && trip.change.at === now) trip.change = { ...trip.change, why: "You updated the trip, so the list changed a little." };
     } else {
       const learned = learnFrom(loadTrips());
-      const { items, removedRuleIds } = buildItems({ stops, activities, quiz }, learned);
+      const { items, removedRuleIds } = buildItems({ stops, activities, quiz }, learned, hidden);
       trip = {
         v: 1, id: newTripId(), cover: "strawberry", stops, activities, quiz, items, removedRuleIds,
         dismissedSuggestions: [], createdAt: now, updatedAt: now,

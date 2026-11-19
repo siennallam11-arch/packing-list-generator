@@ -5,18 +5,18 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { browser } from "react-dom";
 import { Doodle, type DoodleName } from "@/components/Doodle";
-import { Paint } from "@/components/Paint";
+import { CityBanner } from "@/components/CityBanner";
 import { Toast, type ToastData } from "@/components/Toast";
 import { fmtRange, tripTitle, weatherDoodle } from "@/lib/format";
 import { formatTripLength, tripDates, tripLength } from "@/lib/packing/trip";
 import { CATEGORY_LABELS, CATEGORY_ORDER, type Category } from "@/lib/packing/types";
 import { describeFacts } from "@/lib/places/facts";
 import { backupLink } from "@/lib/store/backup";
-import { refreshItems, withLatestNotes } from "@/lib/store/build";
+import { refreshItems, restoreRule, withLatestNotes } from "@/lib/store/build";
 import { learnFrom, suggestionsFor } from "@/lib/store/learning";
 import * as ops from "@/lib/store/ops";
-import { deleteTrip, getTrip, loadTrips, saveTrip, todayIso } from "@/lib/store/storage";
-import type { CoverColour, SavedItem, SavedTrip } from "@/lib/store/types";
+import { deleteTrip, getTrip, hideItem, loadHidden, loadTrips, saveTrip, todayIso, unhideItem } from "@/lib/store/storage";
+import type { SavedItem, SavedTrip } from "@/lib/store/types";
 import { refreshTripWeather } from "@/lib/store/weather";
 import { describeWeather, formatRange } from "@/lib/weather/describe";
 
@@ -28,7 +28,6 @@ const CATEGORY_DOODLES: Record<Category, { name: DoodleName; fill: string }> = {
   gear: { name: "backpack", fill: "var(--fill-tan)" },
   extras: { name: "bottle", fill: "var(--fill-blue)" },
 };
-const COVER_NAMES: Record<CoverColour, string> = { strawberry: "Pink", matcha: "Green", hojicha: "Brown" };
 const SCRIBBLES = ["M2 5C30 1.5 70 7.5 116 3.5", "M2 4C34 7.5 66 1.5 104 5", "M2 5C40 2 80 7 112 4"];
 
 function Box() {
@@ -62,6 +61,8 @@ function TripView({ id }: { id: string }) {
   const [copied, setCopied] = useState<string | null>(null);
   const [celebrate, setCelebrate] = useState(false);
   const [checking, setChecking] = useState(false);
+  const [hidden, setHidden] = useState(loadHidden);
+  const toastId = useRef(0);
 
   const commit = useCallback((next: SavedTrip, toastText?: string, undoable = true) => {
     const prev = latest.current;
@@ -90,7 +91,7 @@ function TripView({ id }: { id: string }) {
     refreshTripWeather(t, todayIso())
       .then((fresh) => {
         if (!live || !fresh || !latest.current) return;
-        commit(refreshItems(latest.current, fresh.stops, new Date().toISOString()));
+        commit(refreshItems(latest.current, fresh.stops, new Date().toISOString(), new Set(loadHidden().map((h) => h.ruleId))));
       })
       .finally(() => live && setChecking(false));
     return () => {
@@ -135,6 +136,35 @@ function TripView({ id }: { id: string }) {
     }
   }
 
+  /** Remove an item; suggested items also stay off future trips (until brought back). */
+  function removeForGood(item: SavedItem) {
+    const prev = latest.current as SavedTrip;
+    const next = ops.removeItem(prev, item.key);
+    latest.current = next;
+    saveTrip(next);
+    setTrip(next);
+    if (item.ruleId) hideItem({ ruleId: item.ruleId, name: item.name });
+    setHidden(loadHidden());
+    toastId.current += 1;
+    setToast({
+      id: toastId.current,
+      text: item.ruleId ? `Removed ${item.name}. It won’t be on future trips either.` : `Removed ${item.name}`,
+      onUndo: () => {
+        latest.current = prev;
+        saveTrip(prev);
+        setTrip(prev);
+        if (item.ruleId) unhideItem(item.ruleId);
+        setHidden(loadHidden());
+      },
+    });
+  }
+
+  function bringBack(ruleId: string, name: string) {
+    unhideItem(ruleId);
+    setHidden(loadHidden());
+    commit(restoreRule(latest.current as SavedTrip, ruleId, new Date().toISOString()), `${name} is back on your lists`, false);
+  }
+
   function addTo(category: Category) {
     const name = adding[category]?.trim();
     if (!name) return;
@@ -147,14 +177,14 @@ function TripView({ id }: { id: string }) {
   return (
     <>
       <div className="trip-top">
-        <Paint colour={trip.cover} className="paint" />
+        <CityBanner stops={trip.stops} />
         <Link className="pill left" href="/">‹ trips</Link>
         <button type="button" className="pill right" onClick={() => setMenu(true)} aria-haspopup="dialog">Trip options</button>
         <div className="badge"><Doodle name="suitcase" size={46} /></div>
       </div>
 
-      <main className="trip-wrap trip-layout">
-        <aside className="trip-aside">
+      <main className="trip-wrap">
+        <header className="trip-header">
         <div className="trip-head">
           <h1 className="cb-trip-title" style={{ fontSize: "clamp(36px, 7vw, 52px)" }}>{tripTitle(trip.stops)}</h1>
           <div className="cb-trip-meta">{fmtRange(startDate, endDate)} · {formatTripLength(nights, days)}</div>
@@ -218,7 +248,7 @@ function TripView({ id }: { id: string }) {
             <span className="hand-note">you added {pastSuggestions.length === 1 ? "this" : "these"} by hand on your last few trips.</span>
           </div>
         )}
-        </aside>
+        </header>
 
         <div className="groups">
           {groups.map(({ category, items }, gi) => {
@@ -243,7 +273,7 @@ function TripView({ id }: { id: string }) {
                     <ul className="cb-items">
                       {items.map((item) =>
                         editing ? (
-                          <EditRow key={item.key} item={item} trip={trip} commit={commit} />
+                          <EditRow key={item.key} item={item} trip={trip} commit={commit} onRemove={() => removeForGood(item)} />
                         ) : (
                           <li key={item.key}>
                             <div className={`item-row${item.maybeNotNeeded ? " maybe-row" : ""}`}>
@@ -253,8 +283,8 @@ function TripView({ id }: { id: string }) {
                                   {item.name}
                                   {item.isNew && <span className="tag new">new</span>}
                                   {item.maybeNotNeeded && <span className="tag maybe">might not need</span>}
+                                  {item.travelNote && <span className="travel-inline"> ({item.travelNote})</span>}
                                   {item.note && <span className="cb-note">{item.note}</span>}
-                                  {item.travelNote && <span className="travel">{item.travelNote}</span>}
                                 </span>
                                 {item.quantity > 1 && (
                                   <>
@@ -263,8 +293,10 @@ function TripView({ id }: { id: string }) {
                                   </>
                                 )}
                               </button>
-                              {item.maybeNotNeeded && (
-                                <button type="button" className="icon-btn" aria-label={`Remove ${item.name}`} onClick={() => commit(ops.removeItem(trip, item.key), `Removed ${item.name}`)}>×</button>
+                              {item.maybeNotNeeded ? (
+                                <button type="button" className="icon-btn" aria-label={`Remove ${item.name} from this trip`} onClick={() => commit(ops.removeItem(trip, item.key), `Removed ${item.name}`)}>×</button>
+                              ) : (
+                                <button type="button" className="icon-btn remove-x" aria-label={`Remove ${item.name}`} title="Remove (it won’t be suggested again)" onClick={() => removeForGood(item)}>×</button>
                               )}
                             </div>
                           </li>
@@ -283,6 +315,18 @@ function TripView({ id }: { id: string }) {
           })}
         </div>
 
+        {hidden.length > 0 && (
+          <div className="hidden-list">
+            <span className="cb-label">Left off all your lists</span>
+            <div className="row">
+              {hidden.map((h) => (
+                <button key={h.ruleId} type="button" className="cb-chip cb-chip--add" onClick={() => bringBack(h.ruleId, h.name)} aria-label={`Bring back ${h.name}`}>
+                  {h.name} <span className="x">bring back</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </main>
 
       {menu && (
@@ -292,14 +336,6 @@ function TripView({ id }: { id: string }) {
             <div className="sheet-head">
               <b>Trip options</b>
               <button type="button" className="cb-btn cb-btn--text" onClick={() => { setMenu(false); setConfirmDelete(false); setCopied(null); }}>Done</button>
-            </div>
-            <span className="cb-label">Cover</span>
-            <div className="row">
-              {(["strawberry", "matcha", "hojicha"] as CoverColour[]).map((c) => (
-                <button key={c} type="button" className="cb-opt cover-swatch" aria-pressed={trip.cover === c} aria-label={`${COVER_NAMES[c]} cover`} onClick={() => commit(ops.setCover(trip, c), undefined, false)}>
-                  <Paint colour={c} style={{ width: "100%", height: 40, display: "block" }} />
-                </button>
-              ))}
             </div>
             <Link className="cb-btn cb-btn--quiet" href={`/new?edit=${trip.id}`}>Change cities, dates or answers</Link>
             <button type="button" className="cb-btn cb-btn--quiet" onClick={copyBackup}>Copy backup link</button>
@@ -337,7 +373,7 @@ function TripView({ id }: { id: string }) {
   );
 }
 
-function EditRow({ item, trip, commit }: { item: SavedItem; trip: SavedTrip; commit: (t: SavedTrip, text?: string) => void }) {
+function EditRow({ item, trip, commit, onRemove }: { item: SavedItem; trip: SavedTrip; commit: (t: SavedTrip, text?: string) => void; onRemove: () => void }) {
   const [name, setName] = useState(item.name);
   return (
     <li className="edit-row">
@@ -353,7 +389,7 @@ function EditRow({ item, trip, commit }: { item: SavedItem; trip: SavedTrip; com
         <span>{item.quantity}</span>
         <button type="button" aria-label={`More ${item.name}`} onClick={() => commit(ops.setQuantity(trip, item.key, item.quantity + 1))}>+</button>
       </span>
-      <button type="button" className="icon-btn" aria-label={`Remove ${item.name}`} onClick={() => commit(ops.removeItem(trip, item.key), `Removed ${item.name}`)}>×</button>
+      <button type="button" className="icon-btn" aria-label={`Remove ${item.name}`} onClick={onRemove}>×</button>
     </li>
   );
 }

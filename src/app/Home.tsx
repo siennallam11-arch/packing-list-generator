@@ -4,7 +4,7 @@ import Link from "next/link";
 import { use } from "react";
 import { browser } from "react-dom";
 import { Doodle } from "@/components/Doodle";
-import { Paint } from "@/components/Paint";
+import { CityBanner } from "@/components/CityBanner";
 import { fmtMonth, fmtRange, tripTitle, untilText } from "@/lib/format";
 import { daysBetween, tripDates } from "@/lib/packing/trip";
 import { packedCount } from "@/lib/store/ops";
@@ -45,7 +45,7 @@ export function Home() {
             const total = trip.items.length;
             return (
               <Link key={trip.id} href={`/trip?id=${trip.id}`} className="home-trip">
-                <Paint colour={trip.cover} className="swatch" />
+                <span className="swatch"><CityBanner stops={trip.stops} mini /></span>
                 <span className="grow">
                   <b>{tripTitle(trip.stops)}</b>
                   <span className="cb-caption">{fmtRange(startDate, endDate)} · {untilText(startDate, endDate, today)}</span>
@@ -57,7 +57,7 @@ export function Home() {
           {past.length > 0 && <span className="cb-label" style={{ marginTop: 12 }}>Past trips</span>}
           {past.map(({ trip, startDate }) => (
             <Link key={trip.id} href={`/trip?id=${trip.id}`} className="home-trip past-trip">
-              <Paint colour={trip.cover} className="swatch" />
+              <span className="swatch"><CityBanner stops={trip.stops} mini /></span>
               <span className="grow"><b>{tripTitle(trip.stops)}</b></span>
               <span className="cb-caption">{fmtMonth(startDate)}</span>
             </Link>

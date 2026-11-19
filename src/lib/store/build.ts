@@ -43,14 +43,18 @@ function fromSuggestion(item: PackingItem): SavedItem {
 }
 
 /** The first checklist for a new trip, shaped by what you've done on past trips. */
-export function buildItems(trip: Pick<SavedTrip, "stops" | "activities" | "quiz">, learned?: Learned): {
+export function buildItems(
+  trip: Pick<SavedTrip, "stops" | "activities" | "quiz">,
+  learned?: Learned,
+  hidden: Set<string> = new Set(),
+): {
   items: SavedItem[];
   removedRuleIds: string[];
 } {
   const removedRuleIds: string[] = [];
   const items: SavedItem[] = [];
   for (const s of suggestedItems(trip)) {
-    if (learned?.usuallyRemoved.has(s.id)) {
+    if (hidden.has(s.id) || learned?.usuallyRemoved.has(s.id)) {
       removedRuleIds.push(s.id);
       continue;
     }
@@ -85,7 +89,7 @@ function describeWeatherChange(before: SavedStop[], after: SavedStop[]): string 
  * New suggestions are added and flagged; items that no longer apply are kept but
  * flagged "you might not need this"; your ticks, edits and added items are untouched.
  */
-export function refreshItems(trip: SavedTrip, newStops: SavedStop[], now: string): SavedTrip {
+export function refreshItems(trip: SavedTrip, newStops: SavedStop[], now: string, hidden: Set<string> = new Set()): SavedTrip {
   const next = { ...trip, stops: newStops };
   const suggested = suggestedItems(next);
   const byRule = new Map(trip.items.filter((i) => i.ruleId).map((i) => [i.ruleId as string, i]));
@@ -104,7 +108,7 @@ export function refreshItems(trip: SavedTrip, newStops: SavedStop[], now: string
     return { ...item, quantity, suggestedQuantity: s.quantity, reasons: s.reasons, note: s.note, travelNote: s.travelNote, maybeNotNeeded: false, isNew: false };
   });
   for (const s of suggested) {
-    if (byRule.has(s.id) || trip.removedRuleIds.includes(s.id)) continue;
+    if (byRule.has(s.id) || trip.removedRuleIds.includes(s.id) || hidden.has(s.id)) continue;
     items.push({ ...fromSuggestion(s), isNew: true });
     added.push(s.name);
   }
@@ -112,6 +116,14 @@ export function refreshItems(trip: SavedTrip, newStops: SavedStop[], now: string
   const change: ChangeNote | undefined =
     added.length || maybeNot.length ? { at: now, why: describeWeatherChange(trip.stops, newStops), added, maybeNot } : trip.change;
   return { ...next, items, change, updatedAt: now };
+}
+
+/** Put a hidden item back on this trip (if it applies here). */
+export function restoreRule(trip: SavedTrip, ruleId: string, now: string): SavedTrip {
+  const removedRuleIds = trip.removedRuleIds.filter((id) => id !== ruleId);
+  const s = suggestedItems(trip).find((x) => x.id === ruleId);
+  const items = s && !trip.items.some((i) => i.ruleId === ruleId) ? [...trip.items, fromSuggestion(s)] : trip.items;
+  return { ...trip, removedRuleIds, items, updatedAt: now };
 }
 
 /** Bring notes on rule items up to date (e.g. after the rules gained new reminders). */

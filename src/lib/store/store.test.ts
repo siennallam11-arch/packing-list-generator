@@ -31,7 +31,7 @@ describe("building a trip's list", () => {
   });
 
   it("carries travel reminders", () => {
-    expect(item(makeTrip(), "power-bank")?.travelNote).toBe("Can't go in checked bags");
+    expect(item(makeTrip(), "power-bank")?.travelNote).toBe("can't be checked");
   });
 });
 
@@ -122,5 +122,17 @@ describe("backup links", () => {
     expect(code[0]).toBe("z");
     expect(await decodeTrip(code)).toEqual(trip);
     expect(await decodeTrip("zgarbage")).toBeNull();
+  });
+});
+
+describe("hidden items", () => {
+  it("never suggests a hidden item, and can bring it back", async () => {
+    const { restoreRule } = await import("./build");
+    const base = { stops: [stop()], activities: [], quiz: DEFAULT_QUIZ };
+    const built = buildItems(base, undefined, new Set(["razor"]));
+    expect(built.items.find((i) => i.key === "razor")).toBeUndefined();
+    const trip = makeTrip({ items: built.items, removedRuleIds: built.removedRuleIds });
+    expect(item(refreshItems(trip, [stop({ weather: ["warm"] })], "x", new Set(["razor"])), "razor")).toBeUndefined();
+    expect(item(restoreRule(trip, "razor", "x"), "razor")).toBeDefined();
   });
 });

@@ -19,6 +19,8 @@ export interface Place {
   latitude: number;
   longitude: number;
   timezone?: string;
+  population?: number;
+  elevation?: number;
 }
 
 interface GeocodingResponse {
@@ -30,6 +32,8 @@ interface GeocodingResponse {
     latitude: number;
     longitude: number;
     timezone?: string;
+    population?: number;
+    elevation?: number;
   }[];
 }
 
@@ -49,6 +53,8 @@ export async function searchPlaces(query: string, fetchFn: typeof fetch = fetch)
     latitude: r.latitude,
     longitude: r.longitude,
     timezone: r.timezone,
+    population: r.population,
+    elevation: r.elevation,
   }));
 }
 
@@ -211,4 +217,52 @@ export function tagsFromManualPick(feel: WeatherFeel, rain: boolean, snow = fals
     hot: ["warm", "hot"],
   };
   return [...byFeel[feel], ...(rain ? (["rain"] as const) : []), ...(snow ? (["snow"] as const) : [])];
+}
+
+/** What it's like in a city right now: local time, daylight and weather. */
+export interface CurrentConditions {
+  /** Minutes since local midnight, e.g. 19:42 → 1182 */
+  localMinutes: number;
+  /** Today's sunrise and sunset, in local minutes */
+  sunrise: number;
+  sunset: number;
+  /** WMO weather code (0 clear … 99 thunderstorm) */
+  weatherCode: number;
+  /** 0–100 */
+  cloudCover: number;
+}
+
+const minutesOf = (localIso: string) => {
+  const [h, m] = localIso.slice(11, 16).split(":").map(Number);
+  return h * 60 + m;
+};
+
+export async function getCurrentConditions(
+  place: Pick<Place, "latitude" | "longitude">,
+  fetchFn: typeof fetch = fetch,
+  now = Date.now(),
+): Promise<CurrentConditions> {
+  const params = new URLSearchParams({
+    latitude: String(place.latitude),
+    longitude: String(place.longitude),
+    current: "weather_code,cloud_cover",
+    daily: "sunrise,sunset",
+    timezone: "auto",
+    forecast_days: "1",
+  });
+  const res = await fetchFn(`${FORECAST_URL}?${params}`);
+  if (!res.ok) throw new Error(`Weather lookup failed (${res.status})`);
+  const data = (await res.json()) as {
+    utc_offset_seconds: number;
+    current: { weather_code: number; cloud_cover: number };
+    daily: { sunrise: string[]; sunset: string[] };
+  };
+  const local = new Date(now + data.utc_offset_seconds * 1000).toISOString();
+  return {
+    localMinutes: minutesOf(local),
+    sunrise: minutesOf(data.daily.sunrise[0]),
+    sunset: minutesOf(data.daily.sunset[0]),
+    weatherCode: data.current.weather_code ?? 0,
+    cloudCover: data.current.cloud_cover ?? 0,
+  };
 }
