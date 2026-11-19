@@ -5,6 +5,7 @@ import type { WeatherTag } from "../packing/types";
 
 const GEOCODING_URL = "https://geocoding-api.open-meteo.com/v1/search";
 const FORECAST_URL = "https://api.open-meteo.com/v1/forecast";
+const ARCHIVE_URL = "https://archive-api.open-meteo.com/v1/archive";
 
 /** Open-Meteo forecasts cover today plus the next 15 days. */
 export const FORECAST_HORIZON_DAYS = 15;
@@ -51,26 +52,35 @@ export interface DailyForecast {
   time: string[];
   temperature_2m_max: (number | null)[];
   temperature_2m_min: (number | null)[];
-  precipitation_probability_max: (number | null)[];
+  /** Forecasts only; historical data has no probabilities. */
+  precipitation_probability_max?: (number | null)[];
   precipitation_sum: (number | null)[];
   snowfall_sum: (number | null)[];
 }
 
+export type WeatherSource = "forecast" | "last-year";
+
+/** Temperatures are stored in °C (the thresholds use °C); show them with formatTemp. */
 export interface WeatherSummary {
   /** Lowest overnight temperature, °C */
   low: number;
   /** Highest daytime temperature, °C */
   high: number;
+  /** Typical daytime high, °C */
+  avgHigh: number;
+  /** Typical overnight low, °C */
+  avgLow: number;
+  days: number;
   rainyDays: number;
   snowyDays: number;
   tags: WeatherTag[];
-  /** True when the forecast doesn't reach the end of the trip yet. */
+  /** True when the forecast doesn't reach the end of the stop yet. */
   partial: boolean;
+  /** Real forecast, or the same dates last year for trips beyond the forecast. */
+  source: WeatherSource;
+  /** For "last-year": when the real forecast becomes available. */
+  forecastFrom?: string;
 }
-
-export type WeatherResult =
-  | { status: "ok"; summary: WeatherSummary }
-  | { status: "too-far"; availableFrom: string };
 
 // Thresholds that turn numbers into packing decisions (°C, mm, %).
 export const THRESHOLDS = {
@@ -86,7 +96,13 @@ export const THRESHOLDS = {
 
 const nums = (values: (number | null)[]) => values.filter((v): v is number => v !== null);
 
-export function summarizeForecast(daily: DailyForecast, partial = false): WeatherSummary {
+const avg = (values: number[]) => values.reduce((a, b) => a + b, 0) / values.length;
+
+export function summarizeForecast(
+  daily: DailyForecast,
+  partial = false,
+  source: WeatherSource = "forecast",
+): WeatherSummary {
   const lows = nums(daily.temperature_2m_min);
   const highs = nums(daily.temperature_2m_max);
   if (lows.length === 0 || highs.length === 0) throw new Error("Forecast has no temperatures");
@@ -96,7 +112,7 @@ export function summarizeForecast(daily: DailyForecast, partial = false): Weathe
 
   const rainyDays = daily.time.filter(
     (_, i) =>
-      (daily.precipitation_probability_max[i] ?? 0) >= THRESHOLDS.rainProbability ||
+      (daily.precipitation_probability_max?.[i] ?? 0) >= THRESHOLDS.rainProbability ||
       (daily.precipitation_sum[i] ?? 0) >= THRESHOLDS.rainMm,
   ).length;
   const snowyDays = daily.snowfall_sum.filter((s) => (s ?? 0) >= THRESHOLDS.snowCm).length;
@@ -110,44 +126,77 @@ export function summarizeForecast(daily: DailyForecast, partial = false): Weathe
   if (rainyDays > 0) tags.push("rain");
   if (snowyDays > 0) tags.push("snow");
 
-  return { low: Math.round(low), high: Math.round(high), rainyDays, snowyDays, tags, partial };
+  return {
+    low: Math.round(low),
+    high: Math.round(high),
+    avgHigh: Math.round(avg(highs)),
+    avgLow: Math.round(avg(lows)),
+    days: daily.time.length,
+    rainyDays,
+    snowyDays,
+    tags,
+    partial,
+    source,
+  };
+}
+
+const DAILY_FORECAST = "temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,snowfall_sum";
+const DAILY_ARCHIVE = "temperature_2m_max,temperature_2m_min,precipitation_sum,snowfall_sum";
+
+/** The same calendar dates, `years` earlier (Feb 29 becomes Feb 28). */
+export function shiftYears(iso: string, years: number): string {
+  const [y, m, d] = iso.split("-").map(Number);
+  const year = y - years;
+  const leap = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+  const day = m === 2 && d === 29 && !leap ? 28 : d;
+  return `${year}-${String(m).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
 }
 
 /**
- * Get the weather for a trip. Trips that start more than ~2 weeks out
- * return "too-far" (the page then asks the user to pick the weather by hand).
+ * Get the weather for one city's dates.
+ * Within ~2 weeks: the real forecast. Further out: the same dates last year,
+ * which is a good guide to what's typical, until the forecast arrives.
  */
-export async function getTripWeather(
+export async function getStopWeather(
   place: Pick<Place, "latitude" | "longitude">,
   startDate: string,
   endDate: string,
   today: string,
   fetchFn: typeof fetch = fetch,
-): Promise<WeatherResult> {
+): Promise<WeatherSummary> {
   const lastForecastDay = addDays(today, FORECAST_HORIZON_DAYS);
+  const base = { latitude: String(place.latitude), longitude: String(place.longitude), timezone: "auto" };
+
   if (daysBetween(lastForecastDay, startDate) > 0) {
-    return { status: "too-far", availableFrom: addDays(startDate, -FORECAST_HORIZON_DAYS) };
+    // Go back whole years until the dates are safely in the past.
+    let years = 1;
+    while (daysBetween(shiftYears(endDate, years), today) < 7) years++;
+    const params = new URLSearchParams({
+      ...base,
+      daily: DAILY_ARCHIVE,
+      start_date: shiftYears(startDate, years),
+      end_date: shiftYears(endDate, years),
+    });
+    const res = await fetchFn(`${ARCHIVE_URL}?${params}`);
+    if (!res.ok) throw new Error(`Weather lookup failed (${res.status})`);
+    const data = (await res.json()) as { daily: DailyForecast };
+    return {
+      ...summarizeForecast(data.daily, false, "last-year"),
+      forecastFrom: addDays(startDate, -FORECAST_HORIZON_DAYS),
+    };
   }
 
   const from = daysBetween(today, startDate) > 0 ? startDate : today;
   const partial = daysBetween(lastForecastDay, endDate) > 0;
   const to = partial ? lastForecastDay : endDate;
-
-  const params = new URLSearchParams({
-    latitude: String(place.latitude),
-    longitude: String(place.longitude),
-    daily: "temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum,snowfall_sum",
-    timezone: "auto",
-    start_date: from,
-    end_date: to,
-  });
+  const params = new URLSearchParams({ ...base, daily: DAILY_FORECAST, start_date: from, end_date: to });
   const res = await fetchFn(`${FORECAST_URL}?${params}`);
   if (!res.ok) throw new Error(`Weather lookup failed (${res.status})`);
   const data = (await res.json()) as { daily: DailyForecast };
-  return { status: "ok", summary: summarizeForecast(data.daily, partial) };
+  return summarizeForecast(data.daily, partial, "forecast");
 }
 
-/** For trips too far out for a forecast: "What will it feel like?" */
+/** Fallback if the weather service is down: "What will it feel like?" */
 export type WeatherFeel = "cold" | "cool" | "warm" | "hot";
 
 export function tagsFromManualPick(feel: WeatherFeel, rain: boolean, snow = false): WeatherTag[] {

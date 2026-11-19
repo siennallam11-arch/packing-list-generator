@@ -3,20 +3,32 @@
 // These map 1:1 to database tables once we set up Supabase.
 
 import type { Activity, Category, QuizAnswers, WeatherTag } from "../packing/types";
+import type { WeatherSummary } from "../weather/openMeteo";
 
 export interface Trip {
   id: string;
   /** Secret, unguessable part of the magic link: /t/<shareToken> */
   shareToken: string;
   name: string; // "Tokyo with the girls"
-  destination: string;
-  latitude?: number;
-  longitude?: number;
+  activities: Activity[];
+  createdAt: string;
+}
+
+/** One city on a trip, with its own dates and weather. */
+export interface TripStop {
+  id: string;
+  tripId: string;
+  position: number;
+  destination: string; // "Kyoto"
+  country?: string;
+  latitude: number;
+  longitude: number;
   startDate: string;
   endDate: string;
-  activities: Activity[];
+  /** Packing tags from the weather, or picked by hand if the weather service is down. */
   weather: WeatherTag[];
-  createdAt: string;
+  /** Latest weather lookup, used for the blurb under the city. */
+  weatherSummary?: WeatherSummary;
 }
 
 /** A person on the trip. No account: they just pick their name on first visit. */

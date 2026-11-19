@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { getTripWeather, searchPlaces, summarizeForecast, tagsFromManualPick, type DailyForecast } from "./openMeteo";
+import { getStopWeather, searchPlaces, shiftYears, summarizeForecast, tagsFromManualPick, type DailyForecast } from "./openMeteo";
 
 // Shaped like a real Open-Meteo response for Tokyo in mid-December.
 const tokyoDecember: DailyForecast = {
@@ -16,7 +16,7 @@ const jsonResponse = (body: unknown) => new Response(JSON.stringify(body), { sta
 describe("summarizeForecast", () => {
   it("turns Tokyo in December into cold + rain", () => {
     const s = summarizeForecast(tokyoDecember);
-    expect(s).toMatchObject({ low: 2, high: 13, rainyDays: 1, snowyDays: 0 });
+    expect(s).toMatchObject({ low: 2, high: 13, avgHigh: 11, avgLow: 3, days: 4, rainyDays: 1, snowyDays: 0, source: "forecast" });
     expect(s.tags).toEqual(["cold", "cool", "rain"]);
   });
 
@@ -30,30 +30,46 @@ describe("summarizeForecast", () => {
   });
 });
 
-describe("getTripWeather", () => {
+describe("getStopWeather", () => {
   const tokyo = { latitude: 35.69, longitude: 139.69 };
+  const ok = () => vi.fn().mockResolvedValue(jsonResponse({ daily: tokyoDecember }));
 
-  it("says too-far when the trip is beyond the forecast", async () => {
-    const fetchFn = vi.fn();
-    const result = await getTripWeather(tokyo, "2026-12-10", "2026-12-15", "2026-11-14", fetchFn);
-    expect(result).toEqual({ status: "too-far", availableFrom: "2026-11-25" });
-    expect(fetchFn).not.toHaveBeenCalled();
+  it("uses last year's weather when the trip is beyond the forecast", async () => {
+    const fetchFn = ok();
+    const s = await getStopWeather(tokyo, "2026-12-10", "2026-12-15", "2026-11-14", fetchFn);
+    const url = new URL(fetchFn.mock.calls[0][0]);
+    expect(url.hostname).toBe("archive-api.open-meteo.com");
+    expect(url.searchParams.get("start_date")).toBe("2025-12-10");
+    expect(url.searchParams.get("end_date")).toBe("2025-12-15");
+    expect(s).toMatchObject({ source: "last-year", forecastFrom: "2026-11-25" });
   });
 
-  it("asks for the trip dates when within range", async () => {
-    const fetchFn = vi.fn().mockResolvedValue(jsonResponse({ daily: tokyoDecember }));
-    const result = await getTripWeather(tokyo, "2026-12-10", "2026-12-13", "2026-12-03", fetchFn);
+  it("goes back two years when last year's dates haven't happened yet", async () => {
+    const fetchFn = ok();
+    await getStopWeather(tokyo, "2027-12-10", "2027-12-15", "2026-11-14", fetchFn);
+    expect(new URL(fetchFn.mock.calls[0][0]).searchParams.get("start_date")).toBe("2025-12-10");
+  });
+
+  it("uses the forecast within range", async () => {
+    const fetchFn = ok();
+    const s = await getStopWeather(tokyo, "2026-12-10", "2026-12-13", "2026-12-03", fetchFn);
     const url = new URL(fetchFn.mock.calls[0][0]);
+    expect(url.hostname).toBe("api.open-meteo.com");
     expect(url.searchParams.get("start_date")).toBe("2026-12-10");
     expect(url.searchParams.get("end_date")).toBe("2026-12-13");
-    expect(result.status === "ok" && result.summary.partial).toBe(false);
+    expect(s).toMatchObject({ source: "forecast", partial: false });
   });
 
-  it("clips long trips to the forecast horizon and marks them partial", async () => {
-    const fetchFn = vi.fn().mockResolvedValue(jsonResponse({ daily: tokyoDecember }));
-    const result = await getTripWeather(tokyo, "2026-12-10", "2026-12-30", "2026-12-03", fetchFn);
+  it("clips long stops to the forecast horizon and marks them partial", async () => {
+    const fetchFn = ok();
+    const s = await getStopWeather(tokyo, "2026-12-10", "2026-12-30", "2026-12-03", fetchFn);
     expect(new URL(fetchFn.mock.calls[0][0]).searchParams.get("end_date")).toBe("2026-12-18");
-    expect(result.status === "ok" && result.summary.partial).toBe(true);
+    expect(s.partial).toBe(true);
+  });
+
+  it("shifts leap days", () => {
+    expect(shiftYears("2028-02-29", 1)).toBe("2027-02-28");
+    expect(shiftYears("2026-12-10", 1)).toBe("2025-12-10");
   });
 });
 

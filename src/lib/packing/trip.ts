@@ -1,3 +1,5 @@
+import type { Stop, WeatherTag } from "./types";
+
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 /** Parse "YYYY-MM-DD" as a calendar date (UTC midnight), ignoring time zones. */
@@ -39,4 +41,29 @@ export function formatTripLength(nights: number, days: number): string {
   const n = `${nights} ${nights === 1 ? "night" : "nights"}`;
   const d = `${days} ${days === 1 ? "day" : "days"}`;
   return `${n} · ${d}`;
+}
+
+
+/** First day to last day across all cities. */
+export function tripDates(stops: Stop[]): { startDate: string; endDate: string } {
+  if (stops.length === 0) throw new Error("A trip needs at least one city");
+  for (const stop of stops) tripLength(stop.startDate, stop.endDate); // validates each stop
+  const starts = stops.map((s) => s.startDate).sort();
+  const ends = stops.map((s) => s.endDate).sort();
+  return { startDate: starts[0], endDate: ends[ends.length - 1] };
+}
+
+/** Weather for packing: every condition you'll meet in any city. */
+export function tripWeather(stops: Stop[]): WeatherTag[] {
+  return [...new Set(stops.flatMap((s) => s.weather))];
+}
+
+/** "Tokyo + Kyoto" */
+export function tripName(stops: Stop[]): string {
+  return stops.map((s) => s.destination).join(" + ");
+}
+
+/** The checklist shows a quantity only when it's more than one. */
+export function showQuantity(quantity: number): boolean {
+  return quantity > 1;
 }

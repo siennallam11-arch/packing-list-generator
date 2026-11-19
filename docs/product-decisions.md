@@ -7,18 +7,25 @@ A running log of what we decided and why. Newest at the bottom.
 - **Platform:** a website that works well on phones. Hosted on Vercel, code on GitHub.
 - **Audience:** family and friends. Personal project.
 - **List logic:** hand-written rules (`src/lib/packing/rules.ts`), no AI.
-- **Weather:** Open-Meteo (free, no key). Forecasts reach ~2 weeks out; further-out trips ask "what's it usually like?" until the forecast arrives.
+- **Weather:** Open-Meteo (free, no key). Within ~2 weeks: the real forecast. Further out: the
+  same dates last year, labelled as such, until the forecast arrives.
+- **Temperatures in Fahrenheit.**
 - **Reminders:** left out.
 
 ## Brand direction
-- Leaning towards **B's look in C's structure**: handwritten headings, typewriter items with dotted
+- **Approved: B's look in C's structure**: handwritten headings, typewriter items with dotted
   leaders, matcha / hojicha / strawberry colours, lots of white; laid out with a painted cover per trip,
   a progress bar and foldable categories.
 - Doodles are drawn in code. **No emoji.**
 
 ## Starting a trip
 - Type the city, with **"+ add another city"** for multi-city trips.
-- Pick dates from a **simple calendar** (tap start, tap end). Show nights and days.
+- **Each city gets its own dates** from a simple calendar (tap start, tap end), because each city
+  has its own weather. Show nights and days for the whole trip.
+- Under each city: its dates, temperature range and a **short weather blurb**
+  ("Chilly, with highs around 52°F and lows near 37°F. Rain likely on one day…").
+- The packing list covers every city's weather (Kyoto freezing → gloves, Tokyo rain → umbrella).
+- Quantities are only shown when more than 1 (no "Passport ×1").
 - Then activities (tap chips), then the quiz (one card per question, every question skippable,
   answers prefilled from your last trip).
 
@@ -34,12 +41,10 @@ A running log of what we decided and why. Newest at the bottom.
 ## Learning from past trips
 - Learn from edits: items you keep removing stop being suggested; quantity changes you repeat
   become the new default; items you keep adding get suggested.
-- **Post-trip check-in** (proposed): "Anything you didn't use?" / "Anything you wished you'd brought?"
+- **No post-trip check-in.** Learning comes from edits only.
 - Learned items appear as **suggestions** in a "From your past trips" section with a reason, never
   added silently.
 - Until sign-in exists, learning lives in one browser; sign-in later makes it follow you.
 
 ## Open questions
-- Multi-city: one date range for the whole trip, or dates per city?
-- Keep the post-trip check-in?
-- Final "go" on the brand direction.
+- None right now.

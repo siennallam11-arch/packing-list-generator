@@ -101,14 +101,20 @@ export const DEFAULT_QUIZ: QuizAnswers = {
   carryOnOnly: false,
 };
 
-export interface TripInput {
+/** One city on the trip, with its own dates (and so its own weather). */
+export interface Stop {
   destination: string;
   /** ISO date, e.g. "2026-12-10" */
   startDate: string;
-  /** ISO date, e.g. "2026-12-15" */
+  /** ISO date, e.g. "2026-12-13". Equal to the next stop's startDate on travel days. */
   endDate: string;
-  activities: Activity[];
   weather: WeatherTag[];
+}
+
+export interface TripInput {
+  /** One or more cities, in travel order. */
+  stops: Stop[];
+  activities: Activity[];
   quiz: QuizAnswers;
 }
 
@@ -117,6 +123,7 @@ export interface PackingItem {
   id: string;
   name: string;
   category: Category;
+  /** How many to pack. The checklist only shows it when it's more than 1. */
   quantity: number;
   note?: string;
   /** Could be shared by the group (hairdryer, speaker, sunscreen...). */
