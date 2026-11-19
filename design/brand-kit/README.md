@@ -19,7 +19,7 @@ Caboodle makes packing lists for trips: type where you're going, answer a few on
 - **Matcha means packed.** `matcha` fills the progress bar; `matcha-ink` draws ticks and recolours a finished category. Don't use green for anything else.
 - `strawberry` is the brand accent: the claimed badge, avatars, highlights. `selected` backs a chosen quiz option or calendar range.
 - Trip covers come in three painted colours only: `cover-strawberry` (default), `cover-matcha`, `cover-hojicha`. Never put text directly on a cover.
-- Doodle fills (`fill-pink`, `fill-green`, `fill-blue`, `fill-butter`, `fill-tan`) are the same in both themes: pastel stickers read well on light and dark paper.
+- Doodle fills (`fill-pink`, `fill-green`, `fill-blue`, `fill-robin`, `fill-tan`) are the same in both themes: pastel stickers read well on light and dark paper.
 - `leader` is decorative only (dotted lines). Never set text in it.
 
 ## Type

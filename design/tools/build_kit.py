@@ -29,7 +29,7 @@ C = [  # name, light, dark, usage
  ("fill-pink", "#f6c4ca", "#f6c4ca", "Doodle fill: documents, suitcase. Same in both themes."),
  ("fill-green", "#bfd9a6", "#bfd9a6", "Doodle fill: clothes, people. Same in both themes."),
  ("fill-blue", "#cfe3f3", "#cfe3f3", "Doodle fill: toiletries, water, rain. Same in both themes."),
- ("fill-butter", "#f5d58a", "#f5d58a", "Doodle fill: tech, sun. Same in both themes."),
+ ("fill-robin", "#c5e8e4", "#c5e8e4", "Doodle fill: tech, sun. A pale robin's-egg blue. Same in both themes."),
  ("fill-tan", "#d9b79c", "#d9b79c", "Doodle fill: activity gear. Same in both themes."),
  ("focus", "#222020", "#f2eded", "Keyboard focus ring: solid 2px, 2px offset. At least 3:1 on paper and every cover."),
 ]
@@ -111,7 +111,7 @@ write(P("components", "bundle.css"), r'''@import url("https://fonts.googleapis.c
 
 /* Buttons */
 .cb-btn { display: inline-flex; align-items: center; gap: var(--space-2); font: 700 14px/1 var(--font-type); padding: 12px 18px;
-  border-radius: var(--radius-sm); border: var(--line-box)px solid var(--ink); border-width: 1.6px; background: var(--ink); color: var(--on-ink); cursor: pointer; }
+  border-radius: var(--radius-sm); border: 1.6px solid var(--ink); background: var(--ink); color: var(--on-ink); cursor: pointer; }
 .cb-btn--quiet { background: transparent; color: var(--ink); border-style: dashed; border-color: var(--ink-soft); }
 .cb-btn--text { background: none; border: 0; padding: 6px 0; color: var(--ink); text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 4px; }
 .cb-btn[disabled] { opacity: .4; cursor: not-allowed; }
@@ -323,7 +323,7 @@ for comp, (marker, html) in previews.items():
     write(P("components", comp, "preview.html"), f"<!-- @dsCard {marker} -->\n{html}\n")
 
 READMES = {
- "Doodle": "Hand-drawn icons for categories, weather and group trips: a wobbly ink outline over a soft, slightly off-register fill.\n\n**Provide:** a doodle name and, optionally, a fill token as `--df`.\n\n- Ink follows `currentColor` (so `ink` in both themes); the fill defaults to the doodle's own pastel (`fill-pink`, `fill-green`, `fill-blue`, `fill-butter`, `fill-tan`).\n- Sizes: 26px beside a city, 28–36px beside a heading, 46px in the cover badge, 64px+ on empty states. Never below 24px: the wobble turns to noise.\n- One doodle per heading or row. Don't line them up as decoration.\n- Uploaded SVGs in **Assets → Doodles** have the ink fixed at `#222020`; use them only on light grounds. In the app, draw them inline so the ink can follow the theme.\n",
+ "Doodle": "Hand-drawn icons for categories, weather and group trips: a wobbly ink outline over a soft, slightly off-register fill.\n\n**Provide:** a doodle name and, optionally, a fill token as `--df`.\n\n- Ink follows `currentColor` (so `ink` in both themes); the fill defaults to the doodle's own pastel (`fill-pink`, `fill-green`, `fill-blue`, `fill-robin`, `fill-tan`).\n- Sizes: 26px beside a city, 28–36px beside a heading, 46px in the cover badge, 64px+ on empty states. Never below 24px: the wobble turns to noise.\n- One doodle per heading or row. Don't line them up as decoration.\n- Uploaded SVGs in **Assets → Doodles** have the ink fixed at `#222020`; use them only on light grounds. In the app, draw them inline so the ink can follow the theme.\n",
  "Button": "Buttons in typewriter bold: one filled ink button per screen for the main action, a dashed quiet button for secondary actions, and a dotted-underline text button for skipping.\n\n**Provide:** a label that says exactly what happens (\"Pack my bag\", \"+ add another city\", \"Skip\").\n\n- Filled: `ink` background, `on-ink` text, `radius-sm`. One per screen.\n- Quiet: dashed `ink-soft` outline, `ink` text. For adding things.\n- Text: no box, dotted underline. For Skip and Cancel.\n- Disabled: 40% opacity, and say why nearby.\n",
  "ChecklistItem": "One line on the packing list: a hand-drawn box, the item name in typewriter, and, only when it's more than one, a dotted leader to the quantity.\n\n**Provide:** the item name, `aria-pressed` for packed, an optional quantity (shown only when >1) and an optional note.\n\n- Tapping anywhere on the row toggles it. Packed items get a `matcha-ink` tick, a strike-through and 45% opacity; they stay in place so the list doesn't jump.\n- Never show \"×1\".\n- Notes (\"Travel size (100 ml or less)\") sit under the name in `type-meta`.\n- \"Why's this here?\" opens a handwritten line in `pen`: \"because: Kyoto drops to 34°F at night\".\n",
  "CategoryHeader": "The heading for each category: a toggle triangle, the category doodle, a handwritten \"The …\" title with a scribbled underline, and a count.\n\n**Provide:** the category, its doodle, packed/total counts and `aria-expanded`.\n\n- Titles always read \"The documents\", \"The clothes\", \"The toiletries\", \"The tech\", \"The activity gear\", \"The odds & ends\".\n- When everything in it is packed, the title and underline turn `matcha-ink`, the count reads \"9/9 packed\", and the category folds itself.\n",
@@ -345,7 +345,7 @@ write(P("components", "Cover", "preview.html"), '''<!-- @dsCard height=288 -->
 .cv { position: relative; width: 960px; height: 288px; background: var(--paper); overflow: hidden; }
 .cv svg { position: absolute; inset: 0; }
 .cv .straw { fill: var(--cover-strawberry); } .cv .matcha { fill: var(--cover-matcha); } .cv .hoji { fill: var(--cover-hojicha); }
-.cv .ink { fill: var(--ink); } .cv .butter { fill: var(--fill-butter); } .cv .dot { fill: var(--ink); }
+.cv .ink { fill: var(--ink); } .cv .robin { fill: var(--fill-robin); } .cv .dot { fill: var(--ink); }
 .cv .disc { rx: var(--radius-pill); } .cv .tile { rx: var(--radius-md); }
 .cv .name { position: absolute; left: 40px; bottom: 40px; max-width: 440px; }
 .cv .name b { display: block; font: 700 90px/.95 var(--font-hand); color: var(--ink); }
@@ -353,7 +353,7 @@ write(P("components", "Cover", "preview.html"), '''<!-- @dsCard height=288 -->
 </style>
 <div class="cv">
 <svg width="960" height="288" viewBox="0 0 960 288" aria-hidden="true">
-<!-- blocks: cover-strawberry 300×168 (bleeds top), cover-matcha 220×128 (bleeds right), cover-hojicha 168×92, ink disc 64 (radius-pill), fill-butter 56 tile (radius-md)
+<!-- blocks: cover-strawberry 300×168 (bleeds top), cover-matcha 220×128 (bleeds right), cover-hojicha 168×92, ink disc 64 (radius-pill), fill-robin 56 tile (radius-md)
      arrangement: a staggered stack of painted slabs, like trip covers piled on a desk, all right of x=480
      pattern: the dotted leader (the line between an item and its quantity), two rows of dots at space-4 pitch, because the menu-card dotted line is the most Caboodle shape there is
      scales: dot pitch space-4 (16px), gaps space-3/space-6, radii radius-md and radius-pill -->
@@ -362,7 +362,7 @@ write(P("components", "Cover", "preview.html"), '''<!-- @dsCard height=288 -->
 <rect class="matcha" x="748" y="136" width="236" height="128" filter="url(#cvp)"/>
 <rect class="hoji" x="560" y="184" width="168" height="92" filter="url(#cvp)"/>
 <rect class="ink disc" x="864" y="32" width="64" height="64" rx="32"/>
-<rect class="butter tile" x="492" y="200" width="56" height="56" rx="10"/>
+<rect class="robin tile" x="492" y="200" width="56" height="56" rx="10"/>
 ''' + "".join(f'<circle class="dot" cx="{x}" cy="{y}" r="2.4"/>' for y in (72, 104) for x in range(552, 912, 16)) + '''
 </svg>
 <div class="name"><b>Caboodle</b><span>The whole kit &amp; caboodle, packed.</span></div>
@@ -391,7 +391,7 @@ write(P("README.md"), r'''Caboodle makes packing lists for trips: type where you
 - **Matcha means packed.** `matcha` fills the progress bar; `matcha-ink` draws ticks and recolours a finished category. Don't use green for anything else.
 - `strawberry` is the brand accent: the claimed badge, avatars, highlights. `selected` backs a chosen quiz option or calendar range.
 - Trip covers come in three painted colours only: `cover-strawberry` (default), `cover-matcha`, `cover-hojicha`. Never put text directly on a cover.
-- Doodle fills (`fill-pink`, `fill-green`, `fill-blue`, `fill-butter`, `fill-tan`) are the same in both themes: pastel stickers read well on light and dark paper.
+- Doodle fills (`fill-pink`, `fill-green`, `fill-blue`, `fill-robin`, `fill-tan`) are the same in both themes: pastel stickers read well on light and dark paper.
 - `leader` is decorative only (dotted lines). Never set text in it.
 
 ## Type
