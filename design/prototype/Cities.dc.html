@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cities and dates</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/caboodle/tokens.css">
+<link rel="stylesheet" href="ds/caboodle/components/bundle.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&amp;family=Gaegu:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#222020}a:hover{color:#6b6466}
+.cb-day.other{color:var(--ink-soft);text-decoration:underline dotted;text-underline-offset:4px}
+@keyframes cb-rise{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+.cb-sheet{animation:cb-rise .2s ease-out}
+@media (prefers-reduced-motion: reduce){.cb-sheet{animation:none}}
+</style>
+</helmet>
+<div class="cb-stage" style="width: 390px; height: 844px; padding: 24px 20px; display: flex; flex-direction: column; gap: 22px; overflow: hidden; position: relative">
+  <div style="display: flex; justify-content: space-between; align-items: center">
+    <a href="Main.dc.html" class="cb-caption" style="text-decoration: none">‹ back</a>
+    <span class="cb-label">Step 1 of 3</span>
+  </div>
+
+  <div style="display: grid; gap: 10px">
+    <label for="city" style="font: 700 30px/1.05 var(--font-hand)">Where are you off to?</label>
+    <input class="cb-input" id="city" value="{{query}}" onChange="{{typed}}" placeholder="Type a city">
+    <sc-if value="{{showSuggestions}}" hint-placeholder-val="{{ true }}">
+      <div style="display: grid; border: 1px solid var(--rule); border-radius: var(--radius-sm); background: var(--paper-raised)">
+        <sc-for list="{{suggestions}}" as="s" hint-placeholder-count="2">
+          <button onClick="{{s.add}}" style="display: flex; justify-content: space-between; gap: 8px; background: none; border: 0; border-bottom: 1px solid var(--rule); padding: 12px; font: 400 14px/1.3 var(--font-type); color: var(--ink); text-align: left; cursor: pointer">
+            <span>{{s.name}}</span><span class="cb-caption">{{s.where}}</span>
+          </button>
+        </sc-for>
+      </div>
+    </sc-if>
+  </div>
+
+  <div style="display: grid; gap: 10px">
+    <span class="cb-label">Your cities, in order</span>
+    <sc-for list="{{stops}}" as="stop" hint-placeholder-count="2">
+      <div style="display: flex; align-items: center; gap: 10px; border: 1.6px solid var(--ink); border-radius: var(--radius-sm); padding: 8px 8px 8px 12px">
+        <span style="font: 700 13px/1 var(--font-type); color: var(--ink-soft); width: 14px">{{stop.n}}</span>
+        <span style="font: 700 22px/1 var(--font-hand); flex: 1; min-width: 0">{{stop.name}}</span>
+        <button onClick="{{stop.open}}" style="font: 400 12px/1.3 var(--font-type); color: {{stop.datesColor}}; background: var(--paper); border: 1.4px {{stop.border}} var(--leader); border-radius: var(--radius-sm); padding: 8px 10px; cursor: pointer; min-height: 36px">{{stop.dates}}</button>
+        <button onClick="{{stop.remove}}" aria-label="Remove {{stop.name}}" style="background: none; border: 0; color: var(--ink-soft); font: 400 16px/1 var(--font-type); cursor: pointer; padding: 6px">×</button>
+      </div>
+    </sc-for>
+    <button class="cb-btn cb-btn--quiet" onClick="{{focusAdd}}" style="justify-self: start">+ add another city</button>
+  </div>
+
+  <p class="cb-why" style="margin: 0">each city gets its own dates, so we can check the weather in each one.</p>
+
+  <div style="margin-top: auto; display: grid; gap: 10px">
+    <sc-if value="{{allSet}}" hint-placeholder-val="{{ false }}">
+      <span class="cb-caption" style="text-align: center">Whole trip: {{whole}}</span>
+      <a class="cb-btn" href="Activities.dc.html" style="justify-content: center; text-decoration: none">Next: what are you up to?</a>
+    </sc-if>
+    <sc-if value="{{needsDates}}" hint-placeholder-val="{{ true }}">
+      <button class="cb-btn" onClick="{{openMissing}}" style="justify-content: center">Pick dates for {{missingName}}</button>
+    </sc-if>
+  </div>
+
+  <sc-if value="{{sheetOpen}}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; inset: 0; background: rgba(34, 32, 32, .28)" onClick="{{close}}"></div>
+    <div class="cb-sheet" role="dialog" aria-label="Pick dates for {{sheetCity}}" style="position: absolute; left: 0; right: 0; bottom: 0; background: var(--paper-raised); border-radius: var(--radius-lg) var(--radius-lg) 0 0; box-shadow: var(--shadow-lift); padding: 18px 20px 24px; display: grid; gap: 12px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline">
+        <span style="font: 700 26px/1 var(--font-hand)">{{sheetCity}}</span>
+        <button class="cb-btn cb-btn--text" onClick="{{close}}">Done</button>
+      </div>
+      <div class="cb-cal" style="max-width: none; padding: 0; background: none">
+        <div class="cb-cal-head"><span aria-hidden="true">‹</span><b>December 2026</b><span aria-hidden="true">›</span></div>
+        <div class="cb-cal-grid">
+          <span class="dow">M</span><span class="dow">T</span><span class="dow">W</span><span class="dow">T</span><span class="dow">F</span><span class="dow">S</span><span class="dow">S</span>
+          <span class="cb-day out" style="display: grid; place-items: center">30</span>
+          <sc-for list="{{days}}" as="d" hint-placeholder-count="31">
+            <button class="{{d.cls}}" onClick="{{d.pick}}" aria-pressed="{{d.on}}">{{d.n}}</button>
+          </sc-for>
+          <span class="cb-day out" style="display: grid; place-items: center">1</span>
+          <span class="cb-day out" style="display: grid; place-items: center">2</span>
+          <span class="cb-day out" style="display: grid; place-items: center">3</span>
+        </div>
+        <div class="cb-cal-foot">{{sheetFoot}}</div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      query: '',
+      stops: [{ name: 'Tokyo', start: 10, end: 13 }, { name: 'Kyoto', start: null, end: null }],
+      open: null,
+      picking: 'start',
+    };
+  }
+  setStop(i, patch) {
+    this.setState({ stops: this.state.stops.map((s, j) => (j === i ? { ...s, ...patch } : s)) });
+  }
+  renderVals() {
+    const { query, stops, open, picking } = this.state;
+    const all = [
+      { name: 'Kyoto', where: 'Japan' }, { name: 'Kyotera', where: 'Uganda' }, { name: 'Osaka', where: 'Japan' },
+      { name: 'Seoul', where: 'South Korea' }, { name: 'Taipei', where: 'Taiwan' }, { name: 'Tokyo', where: 'Japan' },
+    ];
+    const q = (query || '').toLowerCase();
+    const suggestions = q.length < 2 ? [] : all.filter((p) => p.name.toLowerCase().startsWith(q)).map((p) => ({
+      ...p,
+      add: () => {
+        const exists = stops.some((s) => s.name === p.name);
+        const next = exists ? stops : [...stops, { name: p.name, start: null, end: null }];
+        this.setState({ query: '', stops: next, open: exists ? null : next.length - 1, picking: 'start' });
+      },
+    }));
+    const fmt = (s) => (s.start && s.end ? 'Dec ' + s.start + ' – ' + s.end : s.start ? 'Dec ' + s.start + ' – ?' : 'pick dates');
+    const missing = stops.findIndex((s) => !(s.start && s.end));
+    const allSet = stops.length > 0 && missing === -1;
+    const first = Math.min(...stops.map((s) => s.start || 99));
+    const last = Math.max(...stops.map((s) => s.end || 0));
+    const total = last - first;
+
+    let days = [], sheetCity = '', sheetFoot = '';
+    if (open !== null && stops[open]) {
+      const cur = stops[open];
+      sheetCity = cur.name;
+      for (let n = 1; n <= 31; n++) {
+        let cls = 'cb-day';
+        const other = stops.some((s, j) => j !== open && s.start && s.end && n >= s.start && n <= s.end);
+        if (n === cur.start) cls += ' start';
+        else if (cur.end && n === cur.end) cls += ' end';
+        else if (cur.start && cur.end && n > cur.start && n < cur.end) cls += ' in-range';
+        else if (other) cls += ' other';
+        days.push({
+          n, cls, on: String(n === cur.start || n === cur.end),
+          pick: () => {
+            if (picking === 'start' || !cur.start || n < cur.start) {
+              this.setStop(open, { start: n, end: null });
+              this.setState({ picking: 'end' });
+            } else {
+              this.setStop(open, { end: n });
+              this.setState({ picking: 'start' });
+            }
+          },
+        });
+      }
+      const nights = cur.start && cur.end ? cur.end - cur.start : 0;
+      sheetFoot = cur.start && cur.end ? cur.name + ' · Dec ' + cur.start + ' – Dec ' + cur.end + ' · ' + nights + (nights === 1 ? ' night' : ' nights') : 'Other cities on this trip are underlined.';
+    }
+
+    return {
+      query,
+      typed: (e) => this.setState({ query: e.target.value }),
+      showSuggestions: suggestions.length > 0,
+      suggestions,
+      focusAdd: () => this.setState({ query: '' }),
+      stops: stops.map((s, i) => ({
+        name: s.name, n: i + 1, dates: fmt(s),
+        datesColor: s.start && s.end ? 'var(--ink)' : 'var(--pen)',
+        border: s.start && s.end ? 'solid' : 'dashed',
+        open: () => this.setState({ open: i, picking: 'start' }),
+        remove: () => this.setState({ stops: stops.filter((_, j) => j !== i), open: null }),
+      })),
+      allSet,
+      needsDates: !allSet && stops.length > 0,
+      missingName: missing >= 0 ? stops[missing].name : '',
+      openMissing: () => this.setState({ open: missing, picking: 'start' }),
+      whole: allSet ? 'Dec ' + first + ' – Dec ' + last + ' · ' + total + ' nights · ' + (total + 1) + ' days' : '',
+      sheetOpen: open !== null && !!stops[open],
+      sheetCity, sheetFoot, days,
+      close: () => this.setState({ open: null, picking: 'start' }),
+    };
+  }
+}
+</script>
+</body>
+</html>

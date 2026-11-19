@@ -1,0 +1,71 @@
+/* Caboodle — generated from tokens.json */
+:root, [data-theme="light"] {
+  --paper: #ffffff;
+  --paper-raised: #faf7f6;
+  --ink: #222020;
+  --ink-soft: #6b6466;
+  --on-ink: #ffffff;
+  --rule: #eeeaea;
+  --leader: #a79ea0;
+  --matcha: #86b05c;
+  --matcha-ink: #4f7f3c;
+  --hojicha: #a8774f;
+  --strawberry: #e77681;
+  --pen: #c04a5a;
+  --selected: #fbe6e8;
+  --cover-strawberry: #f09aa3;
+  --cover-matcha: #a9c98a;
+  --cover-hojicha: #c9a286;
+  --fill-pink: #f6c4ca;
+  --fill-green: #bfd9a6;
+  --fill-blue: #cfe3f3;
+  --fill-robin: #c5e8e4;
+  --fill-tan: #d9b79c;
+  --focus: #222020;
+  --shadow-lift: 0 14px 30px -20px rgba(34, 32, 32, 0.45);
+}
+[data-theme="dark"] {
+  --paper: #1b1819;
+  --paper-raised: #252122;
+  --ink: #f2eded;
+  --ink-soft: #aba2a4;
+  --on-ink: #1b1819;
+  --rule: #383234;
+  --leader: #6e6567;
+  --matcha: #9cc474;
+  --matcha-ink: #a9d182;
+  --hojicha: #c9966d;
+  --strawberry: #f0919a;
+  --pen: #f29ba6;
+  --selected: #3d2a2d;
+  --cover-strawberry: #c96b76;
+  --cover-matcha: #6e9150;
+  --cover-hojicha: #8e6a50;
+  --focus: #f2eded;
+  --shadow-lift: 0 14px 30px -18px rgba(0, 0, 0, 0.7);
+}
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 28px;
+  --radius-sm: 4px;
+  --radius-md: 10px;
+  --radius-lg: 22px;
+  --radius-pill: 999px;
+  --line-doodle: 2.1;
+  --line-box: 1.6;
+  --line-tick: 2.6;
+  --font-hand: "Gaegu", "Comic Sans MS", cursive;
+  --font-type: "Courier Prime", "Courier New", ui-monospace, monospace;
+}
+.hand-display { font-family: var(--font-hand); font-size: 44px; line-height: 0.95; font-weight: 700; }
+.hand-heading { font-family: var(--font-hand); font-size: 23px; line-height: 1; font-weight: 700; }
+.hand-city { font-family: var(--font-hand); font-size: 20px; line-height: 1; font-weight: 700; }
+.hand-note { font-family: var(--font-hand); font-size: 17px; line-height: 1.2; font-weight: 400; }
+.type-item { font-family: var(--font-type); font-size: 14px; line-height: 1.4; font-weight: 400; }
+.type-meta { font-family: var(--font-type); font-size: 12px; line-height: 1.4; font-weight: 400; }
+.type-button { font-family: var(--font-type); font-size: 14px; line-height: 1; font-weight: 700; }
+.type-label { font-family: var(--font-type); font-size: 11px; line-height: 1.2; font-weight: 700; letter-spacing: 0.08em; }

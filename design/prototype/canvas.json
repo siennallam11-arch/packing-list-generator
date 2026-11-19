@@ -1,0 +1,27 @@
+{
+ "v": 3,
+ "createdOnFiles": {"v": 1, "at": "2026-11-19T22:15:00Z"},
+ "title": "Caboodle Prototype",
+ "launch": {"view": "canvas"},
+ "pages": [],
+ "boards": {
+  "Main.dc.html": {"x": 0, "y": 0, "w": 390, "h": 844, "title": "1 · Home", "is_interactive": true},
+  "Cities.dc.html": {"x": 470, "y": 0, "w": 390, "h": 844, "title": "2 · Cities & dates", "is_interactive": true},
+  "Activities.dc.html": {"x": 940, "y": 0, "w": 390, "h": 844, "title": "3 · Activities", "is_interactive": true},
+  "Quiz.dc.html": {"x": 1410, "y": 0, "w": 390, "h": 844, "title": "4 · Quiz", "is_interactive": true},
+  "Packing.dc.html": {"x": 1880, "y": 0, "w": 390, "h": 844, "title": "5 · Packing…", "is_interactive": true},
+  "Checklist.dc.html": {"x": 0, "y": 1264, "w": 390, "h": 844, "title": "6 · Checklist", "is_interactive": true},
+  "AllPacked.dc.html": {"x": 470, "y": 1264, "w": 390, "h": 844, "title": "7 · All packed", "is_interactive": true},
+  "Invite.dc.html": {"x": 940, "y": 1264, "w": 390, "h": 844, "title": "8 · Invite", "is_interactive": true},
+  "Join.dc.html": {"x": 1410, "y": 1264, "w": 390, "h": 844, "title": "9 · A friend joins", "is_interactive": true},
+  "Shared.dc.html": {"x": 1880, "y": 1264, "w": 390, "h": 844, "title": "10 · The shared stuff", "is_interactive": true}
+ },
+ "order": ["Main.dc.html", "Cities.dc.html", "Activities.dc.html", "Quiz.dc.html", "Packing.dc.html", "Checklist.dc.html", "AllPacked.dc.html", "Invite.dc.html", "Join.dc.html", "Shared.dc.html"],
+ "notes": {
+  "row1": {"x": 0, "y": -300, "text": "Start a trip", "kind": "title1", "maxW": 2270},
+  "row2": {"x": 0, "y": 964, "text": "Packing, together", "kind": "title1", "maxW": 2270}
+ },
+ "designSystems": [
+  {"title": "Caboodle", "namespace": "caboodle", "artifact": "https://claude.ai/artifact/HBNJBGWLmiUP1HxdE8ksv3", "version": "1795125869-6ece", "copiedAt": "2026-11-19T22:15:00Z"}
+ ]
+}

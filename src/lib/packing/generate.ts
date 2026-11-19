@@ -1,5 +1,5 @@
 import { RULES, STYLE_INDEX, type Condition, type Quantity, type Rule } from "./rules";
-import { tripLength } from "./trip";
+import { tripDates, tripLength, tripWeather } from "./trip";
 import {
   ACTIVITY_LABELS,
   CATEGORY_LABELS,
@@ -9,6 +9,7 @@ import {
   type PackingItem,
   type PackingList,
   type TripInput,
+  type WeatherTag,
 } from "./types";
 
 /** With laundry you re-wear after this many days. */
@@ -16,10 +17,10 @@ export const LAUNDRY_CYCLE_DAYS = 5;
 /** Without laundry, nobody needs more than this many of anything. */
 export const MAX_PACKING_DAYS = 10;
 
-function matches(condition: Condition, trip: TripInput): boolean {
+function matches(condition: Condition, trip: TripInput, weather: WeatherTag[]): boolean {
   if ("always" in condition) return true;
   if ("activity" in condition) return trip.activities.includes(condition.activity);
-  if ("weather" in condition) return trip.weather.includes(condition.weather);
+  if ("weather" in condition) return weather.includes(condition.weather);
   return trip.quiz[condition.quiz];
 }
 
@@ -53,12 +54,12 @@ export function resolveQuantity(qty: Quantity | undefined, trip: TripInput, days
   }
 }
 
-function buildItem(rule: Rule, trip: TripInput, days: number): PackingItem | null {
+function buildItem(rule: Rule, trip: TripInput, days: number, weather: WeatherTag[]): PackingItem | null {
   if (rule.extraOnly && trip.quiz.packingStyle !== "over") return null;
 
-  const matched = rule.when.filter((c) => matches(c, trip));
+  const matched = rule.when.filter((c) => matches(c, trip, weather));
   if (matched.length === 0) return null;
-  if (rule.unless?.some((c) => matches(c, trip))) return null;
+  if (rule.unless?.some((c) => matches(c, trip, weather))) return null;
 
   const reasons = matched.map(reasonFor).filter((r): r is string => r !== null);
   const note = trip.quiz.carryOnOnly && rule.carryOnNote ? rule.carryOnNote : rule.note;
@@ -69,6 +70,7 @@ function buildItem(rule: Rule, trip: TripInput, days: number): PackingItem | nul
     category: rule.category,
     quantity: resolveQuantity(rule.qty, trip, days),
     ...(note ? { note } : {}),
+    ...(rule.travelNote ? { travelNote: rule.travelNote } : {}),
     shareable: rule.shareable ?? false,
     reasons,
   };
@@ -76,10 +78,12 @@ function buildItem(rule: Rule, trip: TripInput, days: number): PackingItem | nul
 
 /** Turn a trip + quiz answers + weather into a checklist grouped by category. */
 export function generatePackingList(trip: TripInput, rules: Rule[] = RULES): PackingList {
-  const { nights, days } = tripLength(trip.startDate, trip.endDate);
+  const { startDate, endDate } = tripDates(trip.stops);
+  const { nights, days } = tripLength(startDate, endDate);
+  const weather = tripWeather(trip.stops);
 
   const items = rules
-    .map((rule) => buildItem(rule, trip, days))
+    .map((rule) => buildItem(rule, trip, days, weather))
     .filter((item): item is PackingItem => item !== null);
 
   const groups = CATEGORY_ORDER.map((category) => ({

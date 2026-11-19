@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pick activities</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/caboodle/tokens.css">
+<link rel="stylesheet" href="ds/caboodle/components/bundle.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&amp;family=Gaegu:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#222020}a:hover{color:#6b6466}
+</style>
+</helmet>
+<div class="cb-stage" style="width: 390px; height: 844px; padding: 24px 20px; display: flex; flex-direction: column; gap: 20px; overflow: hidden">
+  <div style="display: flex; justify-content: space-between; align-items: center">
+    <a href="Cities.dc.html" class="cb-caption" style="text-decoration: none">‹ back</a>
+    <span class="cb-label">Step 2 of 3</span>
+  </div>
+
+  <div style="display: grid; gap: 6px">
+    <h1 style="margin: 0; font: 700 30px/1.05 var(--font-hand)">What are you up to?</h1>
+    <span class="cb-caption">Tap everything that applies. You can change it later.</span>
+  </div>
+
+  <div style="display: flex; flex-wrap: wrap; gap: 8px">
+    <sc-for list="{{acts}}" as="a" hint-placeholder-count="9">
+      <button class="cb-opt" aria-pressed="{{a.on}}" onClick="{{a.toggle}}" style="min-height: 44px">{{a.label}}</button>
+    </sc-for>
+    <button class="cb-chip cb-chip--add" style="min-height: 44px; cursor: pointer">+ something else</button>
+  </div>
+
+  <p class="cb-why" style="margin: 0">your activities help us plan for what you'll actually be doing, so nothing's missing and nothing's extra.</p>
+
+  <a class="cb-btn" href="Quiz.dc.html" style="margin-top: auto; justify-content: center; text-decoration: none">Next: a few quick questions</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { on: { sightseeing: true, nightlife: true } };
+  }
+  renderVals() {
+    const list = [
+      ['sightseeing', 'Sightseeing'], ['nightlife', 'Nights out'], ['hiking', 'Hiking'],
+      ['beach', 'Beach'], ['pool', 'Pool'], ['skiing', 'Skiing / snowboarding'],
+      ['camping', 'Camping'], ['wedding', 'Wedding'], ['business', 'Work meetings'],
+    ];
+    const on = this.state.on;
+    return {
+      acts: list.map(([k, label]) => ({
+        label,
+        on: String(!!on[k]),
+        toggle: () => this.setState({ on: { ...on, [k]: !on[k] } }),
+      })),
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Join a trip</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/caboodle/tokens.css">
+<link rel="stylesheet" href="ds/caboodle/components/bundle.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&amp;family=Gaegu:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#222020}a:hover{color:#6b6466}
+</style>
+</helmet>
+<svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false"><defs>
+<filter id="cb-wobble" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="3" result="n"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap></filter>
+<filter id="cb-paint" x="-6%" y="-10%" width="112%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="3" seed="7" result="edge"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="edge" scale="12" xChannelSelector="R" yChannelSelector="G" result="shape"></feDisplacementMap><feTurbulence type="fractalNoise" baseFrequency="0.005 0.11" numOctaves="2" seed="4" result="streak"></feTurbulence><feColorMatrix in="streak" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.1 -0.56" result="light"></feColorMatrix><feComposite in="light" in2="shape" operator="in" result="lightIn"></feComposite><feMerge><feMergeNode in="shape"></feMergeNode><feMergeNode in="lightIn"></feMergeNode></feMerge></filter>
+<symbol id="cb-suitcase" viewBox="0 0 48 48"><g transform="translate(1.8 1.6)" style="fill: var(--df, #F6C4CA)"><rect x="5" y="16" width="38" height="25" rx="3"></rect></g><g fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" filter="url(#cb-wobble)"><rect x="5" y="16" width="38" height="25" rx="3"></rect><path d="M18 16v-5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v5"></path><path d="M14 16v25M34 16v25"></path><path d="M21 26.5l1.8 1.8 3.6-3.8"></path><circle cx="23.8" cy="27" r="4.6"></circle></g></symbol>
+</defs></svg>
+<div class="cb-stage" style="width: 390px; height: 844px; padding: 0; display: flex; flex-direction: column; overflow: hidden">
+  <div class="cb-cover">
+    <svg class="paint" viewBox="0 0 390 104" preserveAspectRatio="none" aria-hidden="true"><rect x="-10" y="-12" width="410" height="118" style="fill: var(--cover-strawberry)" filter="url(#cb-paint)"></rect></svg>
+    <div class="badge"><svg aria-hidden="true"><use href="#cb-suitcase"></use></svg></div>
+  </div>
+
+  <div style="padding: 36px 20px 28px; display: flex; flex-direction: column; gap: 20px; flex: 1">
+    <div>
+      <span class="cb-label">You're invited to</span>
+      <p class="cb-trip-title" style="font-size: 38px; margin-top: 4px">tokyo + kyoto</p>
+      <div class="cb-trip-meta">Dec 10 – Dec 15 · 5 nights · 6 days</div>
+    </div>
+
+    <div class="cb-field">
+      <label for="who">Who are you?</label>
+      <input class="cb-input" id="who" value="{{name}}" onChange="{{typed}}" placeholder="Your first name">
+    </div>
+
+    <div style="display: grid; gap: 8px">
+      <span class="cb-caption">Already on this trip, tap if it's you:</span>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px">
+        <sc-for list="{{members}}" as="m" hint-placeholder-count="2">
+          <button class="cb-chip" onClick="{{m.pick}}" style="cursor: pointer; min-height: 40px"><span class="{{m.avCls}}">{{m.initial}}</span>{{m.name}}</button>
+        </sc-for>
+      </div>
+    </div>
+
+    <p style="margin: 0; font: 400 17px/1.2 var(--font-hand); color: var(--pen)">no password. next you'll answer the quick questions and get your own list.</p>
+
+    <a class="cb-btn" href="Shared.dc.html" style="margin-top: auto; justify-content: center; text-decoration: none">{{cta}}</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { name: 'Mia' };
+  }
+  renderVals() {
+    const people = [{ name: 'Sam', cls: 'cb-avatar g' }, { name: 'Jo', cls: 'cb-avatar h' }];
+    const n = (this.state.name || '').trim();
+    return {
+      name: this.state.name,
+      typed: (e) => this.setState({ name: e.target.value }),
+      members: people.map((p) => ({ name: p.name, initial: p.name[0], avCls: p.cls, pick: () => this.setState({ name: p.name }) })),
+      cta: n ? 'Join as ' + n : 'Join the trip',
+    };
+  }
+}
+</script>
+</body>
+</html>

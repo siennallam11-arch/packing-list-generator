@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>All packed</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/caboodle/tokens.css">
+<link rel="stylesheet" href="ds/caboodle/components/bundle.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&amp;family=Gaegu:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#222020}a:hover{color:#6b6466}
+@keyframes cb-wiggle { 0%,100% { transform: rotate(0) } 20% { transform: rotate(-8deg) } 40% { transform: rotate(7deg) } 60% { transform: rotate(-4deg) } 80% { transform: rotate(2deg) } }
+.cb-wiggle { animation: cb-wiggle 1.2s ease-in-out 2; transform-origin: 50% 80%; }
+@media (prefers-reduced-motion: reduce) { .cb-wiggle { animation: none; } }
+</style>
+</helmet>
+<svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false"><defs>
+<filter id="cb-wobble" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="3" result="n"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap></filter>
+<symbol id="cb-suitcase" viewBox="0 0 48 48"><g transform="translate(1.8 1.6)" style="fill: var(--df, #F6C4CA)"><rect x="5" y="16" width="38" height="25" rx="3"></rect></g><g fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" filter="url(#cb-wobble)"><rect x="5" y="16" width="38" height="25" rx="3"></rect><path d="M18 16v-5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v5"></path><path d="M14 16v25M34 16v25"></path><path d="M21 26.5l1.8 1.8 3.6-3.8"></path><circle cx="23.8" cy="27" r="4.6"></circle></g></symbol>
+</defs></svg>
+<div class="cb-stage" style="width: 390px; height: 844px; padding: 24px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; overflow: hidden; text-align: center">
+  <svg class="cb-wiggle" style="width: 160px; height: 160px; color: var(--ink); --df: var(--fill-green)" aria-hidden="true"><use href="#cb-suitcase"></use></svg>
+  <h1 style="margin: 0; font: 700 52px/.95 var(--font-hand); color: var(--matcha-ink)">all packed!</h1>
+  <div style="width: 100%; max-width: 280px" class="cb-progress"><div class="cb-bar"><i style="width: 100%"></i></div><span class="cb-count">32 of 32</span></div>
+  <p style="margin: 0; font: 400 20px/1.25 var(--font-hand); color: var(--pen)">see you in Tokyo. have the best time.</p>
+  <span class="cb-caption" style="max-width: 280px">Mia is 80% packed and Jo is 25%. Nobody's claimed the speaker yet.</span>
+  <div style="display: flex; gap: 10px; margin-top: 10px">
+    <a class="cb-btn cb-btn--quiet" href="Shared.dc.html" style="text-decoration: none">Check the shared stuff</a>
+    <a class="cb-btn" href="Checklist.dc.html" style="text-decoration: none">Back to my list</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

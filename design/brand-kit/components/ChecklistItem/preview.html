@@ -1,0 +1,12 @@
+<!-- @dsCard group="Checklist" height=250 -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><filter id="cb-wobble" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/></filter></defs></svg>
+<div class="cb-stage" style="max-width:360px"><ul class="cb-items">
+<li><button class="cb-item" aria-pressed="true"><svg class="cb-box" viewBox="0 0 24 24" aria-hidden="true"><path class="edge" d="M5 6C9 4.6 15 5.2 19.4 5c.4 4-.2 9 .2 14-5.6.4-10.6-.2-15 .3.3-5.3.7-9.3.4-13.3z"/><path class="tick" d="M6 12.5l4.5 4.5L21 3"/></svg><span class="name">Passport</span></button></li>
+<li><button class="cb-item" aria-pressed="false"><svg class="cb-box" viewBox="0 0 24 24" aria-hidden="true"><path class="edge" d="M5 6C9 4.6 15 5.2 19.4 5c.4 4-.2 9 .2 14-5.6.4-10.6-.2-15 .3.3-5.3.7-9.3.4-13.3z"/><path class="tick" d="M6 12.5l4.5 4.5L21 3"/></svg><span class="name">Underwear</span><span class="cb-lead"></span><span class="cb-qty">×7</span></button></li>
+<li><button class="cb-item" aria-pressed="true"><svg class="cb-box" viewBox="0 0 24 24" aria-hidden="true"><path class="edge" d="M5 6C9 4.6 15 5.2 19.4 5c.4 4-.2 9 .2 14-5.6.4-10.6-.2-15 .3.3-5.3.7-9.3.4-13.3z"/><path class="tick" d="M6 12.5l4.5 4.5L21 3"/></svg><span class="name">T-shirts</span><span class="cb-lead"></span><span class="cb-qty">×6</span></button></li>
+<li><button class="cb-item" aria-pressed="false"><svg class="cb-box" viewBox="0 0 24 24" aria-hidden="true"><path class="edge" d="M5 6C9 4.6 15 5.2 19.4 5c.4 4-.2 9 .2 14-5.6.4-10.6-.2-15 .3.3-5.3.7-9.3.4-13.3z"/><path class="tick" d="M6 12.5l4.5 4.5L21 3"/></svg><span class="name">Shampoo &amp; conditioner<span class="cb-note">Travel size (100 ml or less)</span></span></button></li>
+<li><button class="cb-item" aria-pressed="false"><svg class="cb-box" viewBox="0 0 24 24" aria-hidden="true"><path class="edge" d="M5 6C9 4.6 15 5.2 19.4 5c.4 4-.2 9 .2 14-5.6.4-10.6-.2-15 .3.3-5.3.7-9.3.4-13.3z"/><path class="tick" d="M6 12.5l4.5 4.5L21 3"/></svg><span class="name">Warm coat</span></button></li>
+</ul><p class="cb-why">because: Kyoto drops to 34°F at night</p></div><script>
+document.querySelectorAll('.cb-item').forEach(function (b) { b.addEventListener('click', function () {
+  b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true')); }); });
+</script>
