@@ -13,7 +13,7 @@ import { isInternational } from "@/lib/places/facts";
 import { ACTIVITY_LABELS, ACTIVITY_ORDER, QUIZ } from "@/lib/quiz";
 import { buildItems, refreshItems } from "@/lib/store/build";
 import { learnFrom } from "@/lib/store/learning";
-import { getTrip, loadTrips, newTripId, saveTrip, todayIso } from "@/lib/store/storage";
+import { getTrip, loadHidden, loadTrips, newTripId, saveTrip, todayIso } from "@/lib/store/storage";
 import type { SavedStop, SavedTrip } from "@/lib/store/types";
 import { withWeather } from "@/lib/store/weather";
 import { searchPlaces, type Place } from "@/lib/weather/openMeteo";
@@ -173,13 +173,14 @@ function NewTripFlow({ params }: { params: URLSearchParams }) {
       }),
     );
     const now = new Date().toISOString();
+    const hidden = new Set(loadHidden().map((h) => h.ruleId));
     let trip: SavedTrip;
     if (editing) {
-      trip = refreshItems({ ...editing, activities, quiz }, stops, now);
+      trip = refreshItems({ ...editing, activities, quiz }, stops, now, hidden);
       if (trip.change && trip.change.at === now) trip.change = { ...trip.change, why: "You updated the trip, so the list changed a little." };
     } else {
       const learned = learnFrom(loadTrips());
-      const { items, removedRuleIds } = buildItems({ stops, activities, quiz }, learned);
+      const { items, removedRuleIds } = buildItems({ stops, activities, quiz }, learned, hidden);
       trip = {
         v: 1, id: newTripId(), cover: "strawberry", stops, activities, quiz, items, removedRuleIds,
         dismissedSuggestions: [], createdAt: now, updatedAt: now,

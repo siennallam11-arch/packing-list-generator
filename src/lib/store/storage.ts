@@ -54,3 +54,37 @@ export function todayIso(d = new Date()): string {
   const day = String(d.getDate()).padStart(2, "0");
   return `${y}-${m}-${day}`;
 }
+
+// Items you never want suggested again (removed with ×). Remembered across all trips.
+const HIDDEN_KEY = "caboodle:hidden:v1";
+
+export interface HiddenItem {
+  ruleId: string;
+  name: string;
+}
+
+export function loadHidden(): HiddenItem[] {
+  try {
+    const data = JSON.parse(localStorage.getItem(HIDDEN_KEY) ?? "[]") as HiddenItem[];
+    return Array.isArray(data) ? data.filter((h) => h && typeof h.ruleId === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveHidden(list: HiddenItem[]) {
+  try {
+    localStorage.setItem(HIDDEN_KEY, JSON.stringify(list));
+  } catch {
+    // storage blocked: nothing to remember
+  }
+}
+
+export function hideItem(item: HiddenItem): void {
+  const list = loadHidden().filter((h) => h.ruleId !== item.ruleId);
+  saveHidden([...list, item]);
+}
+
+export function unhideItem(ruleId: string): void {
+  saveHidden(loadHidden().filter((h) => h.ruleId !== ruleId));
+}

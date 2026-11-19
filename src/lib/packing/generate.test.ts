@@ -124,7 +124,7 @@ describe("generatePackingList", () => {
   });
 
   it("shows the liquid limit on liquid toiletries", () => {
-    expect(find(generatePackingList(trip()), "shampoo")?.travelNote).toBe("3.4 fl oz or less in carry-ons");
+    expect(find(generatePackingList(trip()), "shampoo")?.travelNote).toBe("3.4 fl oz");
     expect(find(generatePackingList(trip()), "toothbrush")?.travelNote).toBeUndefined();
   });
 

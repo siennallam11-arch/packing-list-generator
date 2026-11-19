@@ -38,7 +38,7 @@ export interface Rule {
   qty?: Quantity;
   /** Shown under the item name. */
   note?: string;
-  /** An airline/security rule worth knowing, shown on every trip ("Can't go in checked bags"). */
+  /** A short airline rule, shown in pink brackets after the name: "(3.4 fl oz)". */
   travelNote?: string;
   /** Could be shared by a group (goes on the shared list on group trips). */
   shareable?: boolean;
@@ -52,7 +52,7 @@ const act = (activity: Activity): Condition => ({ activity });
 const wx = (weather: WeatherTag): Condition => ({ weather });
 const quiz = (flag: QuizFlag): Condition => ({ quiz: flag });
 
-const LIQUID = "3.4 fl oz or less in carry-ons";
+const LIQUID = "3.4 fl oz";
 
 export const RULES: Rule[] = [
   // ── Documents ────────────────────────────────────────────────
@@ -102,32 +102,32 @@ export const RULES: Rule[] = [
   // ── Toiletries ───────────────────────────────────────────────
   { id: "toothbrush", name: "Toothbrush", category: "toiletries", when: [always] },
   { id: "toothpaste", name: "Toothpaste", category: "toiletries", when: [always], travelNote: LIQUID, shareable: true },
-  { id: "deodorant", name: "Deodorant", category: "toiletries", when: [always], travelNote: "Sticks are fine; gels and sprays 3.4 fl oz or less in carry-ons" },
+  { id: "deodorant", name: "Deodorant", category: "toiletries", when: [always], travelNote: "gel/spray: 3.4 fl oz" },
   { id: "shampoo", name: "Shampoo & conditioner", category: "toiletries", when: [always], travelNote: LIQUID, shareable: true },
   { id: "body-wash", name: "Body wash", category: "toiletries", when: [always], travelNote: LIQUID, shareable: true },
   { id: "skincare", name: "Skincare", category: "toiletries", when: [always], travelNote: LIQUID },
   { id: "hairbrush", name: "Hairbrush / comb", category: "toiletries", when: [always] },
-  { id: "razor", name: "Razor", category: "toiletries", when: [always], travelNote: "Loose blades aren't allowed in carry-ons; cartridge razors are fine" },
+  { id: "razor", name: "Razor", category: "toiletries", when: [always], travelNote: "no loose blades on board" },
   { id: "hairdryer", name: "Hairdryer", category: "toiletries", when: [always], note: "Skip it if your stay has one", shareable: true },
-  { id: "meds", name: "Medications", category: "toiletries", when: [always], travelNote: "Liquid medicine can go over 3.4 fl oz: tell security" },
+  { id: "meds", name: "Medications", category: "toiletries", when: [always], travelNote: "liquids OK, tell security" },
   { id: "painkillers", name: "Painkillers", category: "toiletries", when: [always], shareable: true },
-  { id: "glasses", name: "Glasses / contacts", category: "toiletries", when: [always], note: "If you wear them", travelNote: "Contact solution: 3.4 fl oz or less in carry-ons" },
+  { id: "glasses", name: "Glasses / contacts", category: "toiletries", when: [always], note: "If you wear them", travelNote: "solution: 3.4 fl oz" },
   { id: "sunscreen", name: "Sunscreen", category: "toiletries", when: [wx("warm"), act("beach"), act("pool"), act("skiing"), act("hiking")], travelNote: LIQUID, shareable: true },
   { id: "after-sun", name: "After-sun lotion", category: "toiletries", when: [act("beach")], extraOnly: true, travelNote: LIQUID, shareable: true },
   { id: "lip-balm", name: "Lip balm", category: "toiletries", when: [wx("cold"), act("skiing")] },
   { id: "bug-spray", name: "Bug spray", category: "toiletries", when: [act("hiking"), act("camping")], travelNote: LIQUID, shareable: true },
-  { id: "first-aid", name: "First aid kit", category: "toiletries", when: [act("hiking"), act("camping")], travelNote: "Scissors over 4 inches can't be carried on", shareable: true },
+  { id: "first-aid", name: "First aid kit", category: "toiletries", when: [act("hiking"), act("camping")], travelNote: "scissors under 4 in.", shareable: true },
   { id: "sanitizer", name: "Hand sanitizer", category: "toiletries", when: [always], extraOnly: true, travelNote: LIQUID },
 
   // ── Tech ─────────────────────────────────────────────────────
   { id: "phone-charger", name: "Phone charger", category: "tech", when: [always] },
-  { id: "power-bank", name: "Power bank", category: "tech", when: [always], travelNote: "Can't go in checked bags" },
+  { id: "power-bank", name: "Power bank", category: "tech", when: [always], travelNote: "can't be checked" },
   { id: "headphones", name: "Headphones", category: "tech", when: [always] },
-  { id: "laptop", name: "Laptop & charger", category: "tech", when: [quiz("working"), act("business")], travelNote: "Spare laptop batteries can't go in checked bags" },
+  { id: "laptop", name: "Laptop & charger", category: "tech", when: [quiz("working"), act("business")], travelNote: "spare batteries can't be checked" },
   { id: "adapter", name: "Travel adapter", category: "tech", when: [quiz("international")], note: "Check the plug type", shareable: true },
   { id: "power-strip", name: "Small power strip", category: "tech", when: [always], extraOnly: true, shareable: true },
   { id: "speaker", name: "Portable speaker", category: "tech", when: [act("beach"), act("pool"), act("camping")], shareable: true },
-  { id: "headlamp", name: "Headlamp / flashlight", category: "tech", when: [act("camping"), act("hiking")], travelNote: "Spare lithium batteries can't go in checked bags" },
+  { id: "headlamp", name: "Headlamp / flashlight", category: "tech", when: [act("camping"), act("hiking")], travelNote: "spare batteries can't be checked" },
   { id: "camera", name: "Camera", category: "tech", when: [act("sightseeing")], extraOnly: true },
 
   // ── Activity gear ────────────────────────────────────────────
@@ -141,7 +141,7 @@ export const RULES: Rule[] = [
   { id: "tent", name: "Tent", category: "gear", when: [act("camping")], shareable: true },
   { id: "sleeping-bag", name: "Sleeping bag", category: "gear", when: [act("camping")] },
   { id: "sleeping-pad", name: "Sleeping pad", category: "gear", when: [act("camping")] },
-  { id: "camp-stove", name: "Camp stove & fuel", category: "gear", when: [act("camping")], travelNote: "Fuel can't fly: buy it when you get there", shareable: true },
+  { id: "camp-stove", name: "Camp stove & fuel", category: "gear", when: [act("camping")], travelNote: "fuel can't fly", shareable: true },
   { id: "lantern", name: "Lantern", category: "gear", when: [act("camping")], shareable: true },
   { id: "cooler", name: "Cooler", category: "gear", when: [act("camping")], extraOnly: true, shareable: true },
   { id: "wedding-gift", name: "Wedding gift & card", category: "gear", when: [act("wedding")] },

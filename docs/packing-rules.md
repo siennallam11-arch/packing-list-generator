@@ -69,36 +69,36 @@ Example: 6 days, normal packer, no laundry → 6 tops, 7 underwear, 7 socks, 2 p
 | Item | Added when | How many | Notes |
 |---|---|---|---|
 | Toothbrush | Always | 1 |  |
-| Toothpaste | Always | 1 | Shared · Pink note: 3.4 fl oz or less in carry-ons |
-| Deodorant | Always | 1 | Pink note: Sticks are fine; gels and sprays 3.4 fl oz or less in carry-ons |
-| Shampoo & conditioner | Always | 1 | Shared · Pink note: 3.4 fl oz or less in carry-ons |
-| Body wash | Always | 1 | Shared · Pink note: 3.4 fl oz or less in carry-ons |
-| Skincare | Always | 1 | Pink note: 3.4 fl oz or less in carry-ons |
+| Toothpaste | Always | 1 | Shared · Pink note: 3.4 fl oz |
+| Deodorant | Always | 1 | Pink note: gel/spray: 3.4 fl oz |
+| Shampoo & conditioner | Always | 1 | Shared · Pink note: 3.4 fl oz |
+| Body wash | Always | 1 | Shared · Pink note: 3.4 fl oz |
+| Skincare | Always | 1 | Pink note: 3.4 fl oz |
 | Hairbrush / comb | Always | 1 |  |
-| Razor | Always | 1 | Pink note: Loose blades aren't allowed in carry-ons; cartridge razors are fine |
+| Razor | Always | 1 | Pink note: no loose blades on board |
 | Hairdryer | Always | 1 | Shared · Skip it if your stay has one |
-| Medications | Always | 1 | Pink note: Liquid medicine can go over 3.4 fl oz: tell security |
+| Medications | Always | 1 | Pink note: liquids OK, tell security |
 | Painkillers | Always | 1 | Shared |
-| Glasses / contacts | Always | 1 | If you wear them · Pink note: Contact solution: 3.4 fl oz or less in carry-ons |
-| Sunscreen | Warm days or Beach or Pool or Skiing / snowboarding or Hiking | 1 | Shared · Pink note: 3.4 fl oz or less in carry-ons |
-| After-sun lotion | Beach | 1 | Shared · Overpackers only · Pink note: 3.4 fl oz or less in carry-ons |
+| Glasses / contacts | Always | 1 | If you wear them · Pink note: solution: 3.4 fl oz |
+| Sunscreen | Warm days or Beach or Pool or Skiing / snowboarding or Hiking | 1 | Shared · Pink note: 3.4 fl oz |
+| After-sun lotion | Beach | 1 | Shared · Overpackers only · Pink note: 3.4 fl oz |
 | Lip balm | Cold weather or Skiing / snowboarding | 1 |  |
-| Bug spray | Hiking or Camping | 1 | Shared · Pink note: 3.4 fl oz or less in carry-ons |
-| First aid kit | Hiking or Camping | 1 | Shared · Pink note: Scissors over 4 inches can't be carried on |
-| Hand sanitizer | Always | 1 | Overpackers only · Pink note: 3.4 fl oz or less in carry-ons |
+| Bug spray | Hiking or Camping | 1 | Shared · Pink note: 3.4 fl oz |
+| First aid kit | Hiking or Camping | 1 | Shared · Pink note: scissors under 4 in. |
+| Hand sanitizer | Always | 1 | Overpackers only · Pink note: 3.4 fl oz |
 
 ## Tech
 
 | Item | Added when | How many | Notes |
 |---|---|---|---|
 | Phone charger | Always | 1 |  |
-| Power bank | Always | 1 | Pink note: Can't go in checked bags |
+| Power bank | Always | 1 | Pink note: can't be checked |
 | Headphones | Always | 1 |  |
-| Laptop & charger | Working on the trip or Work meetings | 1 | Pink note: Spare laptop batteries can't go in checked bags |
+| Laptop & charger | Working on the trip or Work meetings | 1 | Pink note: spare batteries can't be checked |
 | Travel adapter | Leaving the country | 1 | Shared · Check the plug type |
 | Small power strip | Always | 1 | Shared · Overpackers only |
 | Portable speaker | Beach or Pool or Camping | 1 | Shared |
-| Headlamp / flashlight | Camping or Hiking | 1 | Pink note: Spare lithium batteries can't go in checked bags |
+| Headlamp / flashlight | Camping or Hiking | 1 | Pink note: spare batteries can't be checked |
 | Camera | Sightseeing | 1 | Overpackers only |
 
 ## Activity gear
@@ -115,7 +115,7 @@ Example: 6 days, normal packer, no laundry → 6 tops, 7 underwear, 7 socks, 2 p
 | Tent | Camping | 1 | Shared |
 | Sleeping bag | Camping | 1 |  |
 | Sleeping pad | Camping | 1 |  |
-| Camp stove & fuel | Camping | 1 | Shared · Pink note: Fuel can't fly: buy it when you get there |
+| Camp stove & fuel | Camping | 1 | Shared · Pink note: fuel can't fly |
 | Lantern | Camping | 1 | Shared |
 | Cooler | Camping | 1 | Shared · Overpackers only |
 | Wedding gift & card | Wedding | 1 |  |

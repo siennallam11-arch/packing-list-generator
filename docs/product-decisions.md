@@ -66,5 +66,12 @@ A running log of what we decided and why. Newest at the bottom.
 - **On computers:** trip details in a column on the left, the list in two columns on the right.
 - **Cover colours** are shown as swatches only, with no names.
 
+## Round 3 feedback (decided)
+- **Trip page:** the trip header (title, cities, weather, progress) spans the full width; the
+  list starts underneath in columns (1 on phones, 2 on tablets, 3 on computers).
+- **Airline reminders are short, pink and in brackets** after the name: "Toothpaste (3.4 fl oz)".
+- **Removing an item is one tap (×)** and it stays off future trips too. "Left off all your lists"
+  at the bottom of a trip lets you bring any of them back. Undo works right after removing.
+
 ## Open questions
 - None right now.
