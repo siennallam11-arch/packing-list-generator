@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { browser } from "react-dom";
 import { Doodle, type DoodleName } from "@/components/Doodle";
-import { Paint } from "@/components/Paint";
+import { CityBanner } from "@/components/CityBanner";
 import { Toast, type ToastData } from "@/components/Toast";
 import { fmtRange, tripTitle, weatherDoodle } from "@/lib/format";
 import { formatTripLength, tripDates, tripLength } from "@/lib/packing/trip";
@@ -16,7 +16,7 @@ import { refreshItems, restoreRule, withLatestNotes } from "@/lib/store/build";
 import { learnFrom, suggestionsFor } from "@/lib/store/learning";
 import * as ops from "@/lib/store/ops";
 import { deleteTrip, getTrip, hideItem, loadHidden, loadTrips, saveTrip, todayIso, unhideItem } from "@/lib/store/storage";
-import type { CoverColour, SavedItem, SavedTrip } from "@/lib/store/types";
+import type { SavedItem, SavedTrip } from "@/lib/store/types";
 import { refreshTripWeather } from "@/lib/store/weather";
 import { describeWeather, formatRange } from "@/lib/weather/describe";
 
@@ -28,7 +28,6 @@ const CATEGORY_DOODLES: Record<Category, { name: DoodleName; fill: string }> = {
   gear: { name: "backpack", fill: "var(--fill-tan)" },
   extras: { name: "bottle", fill: "var(--fill-blue)" },
 };
-const COVER_NAMES: Record<CoverColour, string> = { strawberry: "Pink", matcha: "Green", hojicha: "Brown" };
 const SCRIBBLES = ["M2 5C30 1.5 70 7.5 116 3.5", "M2 4C34 7.5 66 1.5 104 5", "M2 5C40 2 80 7 112 4"];
 
 function Box() {
@@ -178,7 +177,7 @@ function TripView({ id }: { id: string }) {
   return (
     <>
       <div className="trip-top">
-        <Paint colour={trip.cover} className="paint" />
+        <CityBanner stops={trip.stops} />
         <Link className="pill left" href="/">‹ trips</Link>
         <button type="button" className="pill right" onClick={() => setMenu(true)} aria-haspopup="dialog">Trip options</button>
         <div className="badge"><Doodle name="suitcase" size={46} /></div>
@@ -337,14 +336,6 @@ function TripView({ id }: { id: string }) {
             <div className="sheet-head">
               <b>Trip options</b>
               <button type="button" className="cb-btn cb-btn--text" onClick={() => { setMenu(false); setConfirmDelete(false); setCopied(null); }}>Done</button>
-            </div>
-            <span className="cb-label">Cover</span>
-            <div className="row">
-              {(["strawberry", "matcha", "hojicha"] as CoverColour[]).map((c) => (
-                <button key={c} type="button" className="cb-opt cover-swatch" aria-pressed={trip.cover === c} aria-label={`${COVER_NAMES[c]} cover`} onClick={() => commit(ops.setCover(trip, c), undefined, false)}>
-                  <Paint colour={c} style={{ width: "100%", height: 40, display: "block" }} />
-                </button>
-              ))}
             </div>
             <Link className="cb-btn cb-btn--quiet" href={`/new?edit=${trip.id}`}>Change cities, dates or answers</Link>
             <button type="button" className="cb-btn cb-btn--quiet" onClick={copyBackup}>Copy backup link</button>

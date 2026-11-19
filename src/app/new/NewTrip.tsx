@@ -27,6 +27,9 @@ interface Draft {
   countryCode?: string;
   latitude: number;
   longitude: number;
+  timezone?: string;
+  population?: number;
+  elevation?: number;
   startDate?: string;
   endDate?: string;
   existing?: SavedStop;
@@ -110,6 +113,9 @@ function NewTripFlow({ params }: { params: URLSearchParams }) {
       countryCode: p.countryCode,
       latitude: p.latitude,
       longitude: p.longitude,
+      timezone: p.timezone,
+      population: p.population,
+      elevation: p.elevation,
     };
     const prev = drafts[drafts.length - 1];
     if (prev?.endDate) draft.startDate = prev.endDate; // next city usually starts where the last one ends
@@ -159,6 +165,9 @@ function NewTripFlow({ params }: { params: URLSearchParams }) {
           countryCode: d.countryCode,
           latitude: d.latitude,
           longitude: d.longitude,
+          timezone: d.timezone,
+          population: d.population,
+          elevation: d.elevation,
           startDate: d.startDate as string,
           endDate: d.endDate as string,
           weather: [],

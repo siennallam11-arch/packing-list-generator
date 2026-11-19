@@ -73,5 +73,15 @@ A running log of what we decided and why. Newest at the bottom.
 - **Removing an item is one tap (×)** and it stays off future trips too. "Left off all your lists"
   at the bottom of a trip lets you bring any of them back. Undo works right after removing.
 
+## City banners (decided)
+- The plain painted cover is replaced by a **hand-drawn banner of the city**, in the doodle style.
+- **The sky follows the city's local time right now** (dawn, day, dusk, night with stars), with
+  the sun or moon placed where it really is, and the **current weather** (clouds, rain, snow, fog, storms).
+- **~50 major cities have hand-drawn landmarks** (`src/lib/banner/landmarks.ts`); every other city
+  gets its own consistent skyline sized by population, with mountains for high places.
+- Multi-city trips: the banner shows the city you're in today (or the first), and the label
+  ("Tokyo · 8:25 am ›") switches between cities.
+- Cover colour choice removed (the banner replaces it). Home shows a small banner per trip.
+
 ## Open questions
 - None right now.

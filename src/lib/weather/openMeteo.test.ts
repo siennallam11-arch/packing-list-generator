@@ -91,3 +91,20 @@ describe("tagsFromManualPick", () => {
     expect(tagsFromManualPick("hot", false)).toEqual(["warm", "hot"]);
   });
 });
+
+describe("getCurrentConditions", () => {
+  it("reads local time, daylight and weather", async () => {
+    const { getCurrentConditions } = await import("./openMeteo");
+    const fetchFn = vi.fn().mockResolvedValue(
+      jsonResponse({
+        utc_offset_seconds: 9 * 3600,
+        current: { weather_code: 61, cloud_cover: 80 },
+        daily: { sunrise: ["2026-12-10T06:38"], sunset: ["2026-12-10T16:28"] },
+      }),
+    );
+    const now = Date.parse("2026-12-10T10:42:00Z"); // 19:42 in Tokyo
+    expect(await getCurrentConditions({ latitude: 35.7, longitude: 139.7 }, fetchFn, now)).toEqual({
+      localMinutes: 19 * 60 + 42, sunrise: 6 * 60 + 38, sunset: 16 * 60 + 28, weatherCode: 61, cloudCover: 80,
+    });
+  });
+});
