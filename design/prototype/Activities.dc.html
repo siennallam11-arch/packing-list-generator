@@ -18,8 +18,8 @@ a{color:#222020}a:hover{color:#6b6466}
 </helmet>
 <div class="cb-stage" style="width: 390px; height: 844px; padding: 24px 20px; display: flex; flex-direction: column; gap: 20px; overflow: hidden">
   <div style="display: flex; justify-content: space-between; align-items: center">
-    <a href="Dates.dc.html" class="cb-caption" style="text-decoration: none">‹ back</a>
-    <span class="cb-label">Step 3 of 4</span>
+    <a href="Cities.dc.html" class="cb-caption" style="text-decoration: none">‹ back</a>
+    <span class="cb-label">Step 2 of 3</span>
   </div>
 
   <div style="display: grid; gap: 6px">
@@ -34,7 +34,7 @@ a{color:#222020}a:hover{color:#6b6466}
     <button class="cb-chip cb-chip--add" style="min-height: 44px; cursor: pointer">+ something else</button>
   </div>
 
-  <p class="cb-why" style="margin: 0">{{hint}}</p>
+  <p class="cb-why" style="margin: 0">your activities help us plan for what you'll actually be doing, so nothing's missing and nothing's extra.</p>
 
   <a class="cb-btn" href="Quiz.dc.html" style="margin-top: auto; justify-content: center; text-decoration: none">Next: a few quick questions</a>
 </div>
@@ -52,22 +52,12 @@ class Component extends DCLogic {
       ['camping', 'Camping'], ['wedding', 'Wedding'], ['business', 'Work meetings'],
     ];
     const on = this.state.on;
-    const hints = {
-      skiing: 'skiing adds goggles, thermals and ski socks.',
-      wedding: 'wedding adds the outfit, dress shoes and a gift.',
-      beach: 'beach adds a swimsuit, sunscreen and a towel.',
-      hiking: 'hiking adds boots, a rain jacket and a first aid kit.',
-      camping: 'camping adds the tent, a headlamp and a speaker for the group.',
-    };
-    const picked = list.filter(([k]) => on[k]).map(([k]) => k);
-    const lastHint = picked.reverse().find((k) => hints[k]);
     return {
       acts: list.map(([k, label]) => ({
         label,
         on: String(!!on[k]),
         toggle: () => this.setState({ on: { ...on, [k]: !on[k] } }),
       })),
-      hint: lastHint ? hints[lastHint] : 'nights out adds a dressy outfit and shoes.',
     };
   }
 }

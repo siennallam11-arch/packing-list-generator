@@ -28,7 +28,7 @@ a{color:#222020}a:hover{color:#6b6466}
 <div class="cb-stage" style="width: 390px; height: 844px; padding: 24px 20px; display: flex; flex-direction: column; gap: 20px; overflow: hidden">
   <div style="display: flex; justify-content: space-between; align-items: center">
     <a href="Activities.dc.html" class="cb-caption" style="text-decoration: none">‹ back</a>
-    <span class="cb-label">Step 4 of 4</span>
+    <span class="cb-label">Step 3 of 3</span>
   </div>
 
   <div style="display: flex; gap: 6px" aria-hidden="true">
@@ -46,9 +46,6 @@ a{color:#222020}a:hover{color:#6b6466}
           <button class="cb-opt" aria-pressed="{{o.on}}" onClick="{{o.pick}}" style="min-height: 48px">{{o.label}}</button>
         </sc-for>
       </div>
-      <sc-if value="{{hasLast}}" hint-placeholder-val="{{ true }}">
-        <span style="font: 400 17px/1.2 var(--font-hand); color: var(--pen)">{{lastTime}}</span>
-      </sc-if>
       <button class="cb-btn cb-btn--text skip" onClick="{{skip}}">Skip</button>
     </div>
   </sc-if>
@@ -95,8 +92,6 @@ class Component extends DCLogic {
       question: cur.q,
       icon: cur.icon,
       options: cur.opts.map((label) => ({ label, on: String(label === chosen), pick: () => next(label) })),
-      hasLast: !done && !!cur.last,
-      lastTime: 'last time you said: ' + (cur.last || '').toLowerCase(),
       skip: () => next(undefined),
       restart: () => this.setState({ i: 0 }),
       dots: qs.map((_, k) => ({ bg: k < i ? 'var(--matcha)' : k === i ? 'var(--strawberry)' : 'transparent' })),

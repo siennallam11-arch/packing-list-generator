@@ -20,14 +20,14 @@ A running log of what we decided and why. Newest at the bottom.
 
 ## Starting a trip
 - Type the city, with **"+ add another city"** for multi-city trips.
-- **Each city gets its own dates** from a simple calendar (tap start, tap end), because each city
-  has its own weather. Show nights and days for the whole trip.
+- **Each city gets its own dates** from a calendar that **pops up on the same screen** (like a flight
+  booking site) when you tap "pick dates", because each city has its own weather. Show nights and days for the whole trip.
 - Under each city: its dates, temperature range and a **short weather blurb**
   ("Chilly, with highs around 52°F and lows near 37°F. Rain likely on one day…").
 - The packing list covers every city's weather (Kyoto freezing → gloves, Tokyo rain → umbrella).
 - Quantities are only shown when more than 1 (no "Passport ×1").
 - Then activities (tap chips), then the quiz (one card per question, every question skippable,
-  answers prefilled from your last trip).
+  answers prefilled from your last trip, without a "last time you said" note).
 
 ## Group trips
 - Joining is by magic link; first visit asks "Who are you?". No passwords.
