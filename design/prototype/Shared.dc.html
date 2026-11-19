@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>The shared stuff</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/caboodle/tokens.css">
+<link rel="stylesheet" href="ds/caboodle/components/bundle.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&amp;family=Gaegu:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#222020}a:hover{color:#6b6466}
+</style>
+</helmet>
+<svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false"><defs>
+<filter id="cb-wobble" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="3" result="n"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap></filter>
+<symbol id="cb-people" viewBox="0 0 48 48"><g transform="translate(1.8 1.6)" style="fill: var(--df, #BFD9A6)"><circle cx="17" cy="17" r="6"></circle><circle cx="31" cy="17" r="6"></circle></g><g fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" filter="url(#cb-wobble)"><circle cx="17" cy="17" r="6"></circle><circle cx="31" cy="17" r="6"></circle><path d="M7 40c0-6.5 4.5-11 10-11s10 4.5 10 11"></path><path d="M27.5 30.5c1.1-.9 2.3-1.5 3.5-1.5 5.5 0 10 4.5 10 11"></path></g></symbol>
+</defs></svg>
+<div class="cb-stage" style="width: 390px; height: 844px; padding: 24px 20px; display: flex; flex-direction: column; gap: 18px; overflow-y: auto">
+  <div style="display: flex; justify-content: space-between; align-items: center">
+    <a href="Checklist.dc.html" class="cb-caption" style="text-decoration: none">‹ my list</a>
+    <span style="font: 700 20px/1 var(--font-hand)">tokyo + kyoto</span>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 10px">
+    <svg style="width: 44px; height: 44px; color: var(--ink)" aria-hidden="true"><use href="#cb-people"></use></svg>
+    <div style="display: grid; gap: 2px">
+      <h1 style="margin: 0; font: 700 30px/1 var(--font-hand)">The shared stuff</h1>
+      <span class="cb-caption">{{claimedText}}</span>
+    </div>
+  </div>
+
+  <div class="cb-shared" style="max-width: none; gap: 0">
+    <sc-for list="{{items}}" as="it" hint-placeholder-count="5">
+      <div style="display: grid; gap: 4px; padding: 10px 0; border-bottom: 1px solid var(--rule)">
+        <div style="display: flex; align-items: center; gap: 8px; min-height: 32px">
+          <span style="flex: 1; min-width: 0">{{it.name}}</span>
+          <sc-if value="{{it.open}}" hint-placeholder-val="{{ true }}">
+            <button class="cb-claim" onClick="{{it.claim}}" style="min-height: 34px">I'll bring it</button>
+          </sc-if>
+          <sc-if value="{{it.mine}}" hint-placeholder-val="{{ false }}">
+            <button class="cb-claimed" onClick="{{it.unclaim}}" style="background: none; border: 0; cursor: pointer; padding: 0"><span class="cb-avatar">Y</span>you</button>
+          </sc-if>
+          <sc-if value="{{it.theirs}}" hint-placeholder-val="{{ false }}">
+            <span class="cb-claimed"><span class="{{it.avCls}}">{{it.initial}}</span>{{it.by}}'s got it</span>
+          </sc-if>
+        </div>
+        <sc-if value="{{it.hasNote}}" hint-placeholder-val="{{ false }}">
+          <span style="font: 400 16px/1.2 var(--font-hand); color: var(--pen)">{{it.note}}</span>
+        </sc-if>
+      </div>
+    </sc-for>
+    <button class="cb-btn cb-btn--text" style="justify-self: start; color: var(--ink-soft); font-weight: 400; margin-top: 6px">+ add a shared item</button>
+  </div>
+
+  <div class="cb-shared" style="max-width: none">
+    <span class="cb-label">Everyone's progress</span>
+    <div class="cb-friend"><span class="cb-avatar">Y</span><div class="cb-bar"><i style="width: 22%"></i></div><span class="cb-caption">you · 22%</span></div>
+    <div class="cb-friend"><span class="cb-avatar g">M</span><div class="cb-bar"><i style="width: 80%"></i></div><span class="cb-caption">Mia · 80%</span></div>
+    <div class="cb-friend"><span class="cb-avatar h">J</span><div class="cb-bar"><i style="width: 25%"></i></div><span class="cb-caption">Jo · 25%</span></div>
+    <span style="font: 400 16px/1.2 var(--font-hand); color: var(--ink-soft)">just percentages. everyone's own list stays private.</span>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { claims: { hairdryer: 'Mia', shampoo: 'you', adapter: 'Jo' } };
+  }
+  renderVals() {
+    const list = [
+      ['hairdryer', 'Hairdryer', 'Mia: I have a travel one!'],
+      ['speaker', 'Portable speaker', null],
+      ['shampoo', 'Shampoo & conditioner', null],
+      ['adapter', 'Spare travel adapter', 'Jo: Japan uses type A, same as home'],
+      ['painkillers', 'Painkillers', null],
+    ];
+    const claims = this.state.claims;
+    const avatars = { Mia: 'cb-avatar g', Jo: 'cb-avatar h' };
+    const set = (id, who) => this.setState({ claims: { ...claims, [id]: who } });
+    const claimed = list.filter(([id]) => claims[id]).length;
+    return {
+      claimedText: claimed + ' of ' + list.length + ' claimed · tap one to bring it',
+      items: list.map(([id, name, note]) => {
+        const by = claims[id];
+        return {
+          name, note, hasNote: !!note,
+          open: !by, mine: by === 'you', theirs: !!by && by !== 'you',
+          by, initial: by ? by[0] : '', avCls: avatars[by] || 'cb-avatar',
+          claim: () => set(id, 'you'),
+          unclaim: () => set(id, null),
+        };
+      }),
+    };
+  }
+}
+</script>
+</body>
+</html>

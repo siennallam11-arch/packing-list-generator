@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Add cities</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/caboodle/tokens.css">
+<link rel="stylesheet" href="ds/caboodle/components/bundle.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&amp;family=Gaegu:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#222020}a:hover{color:#6b6466}
+</style>
+</helmet>
+<div class="cb-stage" style="width: 390px; height: 844px; padding: 24px 20px; display: flex; flex-direction: column; gap: 22px; overflow: hidden">
+  <div style="display: flex; justify-content: space-between; align-items: center">
+    <a href="Main.dc.html" class="cb-caption" style="text-decoration: none">‹ back</a>
+    <span class="cb-label">Step 1 of 4</span>
+  </div>
+
+  <div style="display: grid; gap: 10px">
+    <label for="city" style="font: 700 30px/1.05 var(--font-hand)">Where are you off to?</label>
+    <input class="cb-input" id="city" value="{{query}}" onChange="{{typed}}" placeholder="Type a city">
+    <sc-if value="{{showSuggestions}}" hint-placeholder-val="{{ true }}">
+      <div style="display: grid; border: 1px solid var(--rule); border-radius: var(--radius-sm); background: var(--paper-raised)">
+        <sc-for list="{{suggestions}}" as="s" hint-placeholder-count="2">
+          <button onClick="{{s.add}}" style="display: flex; justify-content: space-between; gap: 8px; background: none; border: 0; border-bottom: 1px solid var(--rule); padding: 12px; font: 400 14px/1.3 var(--font-type); color: var(--ink); text-align: left; cursor: pointer">
+            <span>{{s.name}}</span><span class="cb-caption">{{s.where}}</span>
+          </button>
+        </sc-for>
+      </div>
+    </sc-if>
+  </div>
+
+  <div style="display: grid; gap: 10px">
+    <span class="cb-label">Your cities, in order</span>
+    <sc-for list="{{stops}}" as="stop" hint-placeholder-count="2">
+      <div style="display: flex; align-items: center; gap: 10px; border: 1.6px solid var(--ink); border-radius: var(--radius-sm); padding: 10px 12px">
+        <span style="font: 700 13px/1 var(--font-type); color: var(--ink-soft); width: 14px">{{stop.n}}</span>
+        <span style="font: 700 22px/1 var(--font-hand); flex: 1">{{stop.name}}</span>
+        <span style="font: 400 12px/1.3 var(--font-type); color: {{stop.datesColor}}">{{stop.dates}}</span>
+        <button onClick="{{stop.remove}}" aria-label="Remove {{stop.name}}" style="background: none; border: 0; color: var(--ink-soft); font: 400 16px/1 var(--font-type); cursor: pointer; padding: 4px">×</button>
+      </div>
+    </sc-for>
+    <button class="cb-btn cb-btn--quiet" onClick="{{focusAdd}}" style="justify-self: start">+ add another city</button>
+  </div>
+
+  <p class="cb-why" style="margin: 0">each city gets its own dates, so we can check the weather in each one.</p>
+
+  <a class="cb-btn" href="Dates.dc.html" style="margin-top: auto; justify-content: center; text-decoration: none">Pick dates for Kyoto</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { query: 'Kyo', stops: [{ name: 'Tokyo', dates: 'Dec 10 – 13' }, { name: 'Kyoto', dates: 'pick dates' }] };
+  }
+  renderVals() {
+    const all = [
+      { name: 'Kyoto', where: 'Japan' },
+      { name: 'Kyotera', where: 'Uganda' },
+      { name: 'Osaka', where: 'Japan' },
+      { name: 'Seoul', where: 'South Korea' },
+      { name: 'Taipei', where: 'Taiwan' },
+    ];
+    const q = (this.state.query || '').toLowerCase();
+    const suggestions = q.length < 2 ? [] : all.filter((p) => p.name.toLowerCase().startsWith(q)).map((p) => ({
+      ...p,
+      add: () => this.setState({ query: '', stops: this.state.stops.some((s) => s.name === p.name) ? this.state.stops : [...this.state.stops, { name: p.name, dates: 'pick dates' }] }),
+    }));
+    return {
+      query: this.state.query,
+      typed: (e) => this.setState({ query: e.target.value }),
+      showSuggestions: suggestions.length > 0,
+      suggestions,
+      focusAdd: () => this.setState({ query: '' }),
+      stops: this.state.stops.map((s, i) => ({
+        ...s,
+        n: i + 1,
+        datesColor: s.dates === 'pick dates' ? 'var(--pen)' : 'var(--ink-soft)',
+        remove: () => this.setState({ stops: this.state.stops.filter((_, j) => j !== i) }),
+      })),
+    };
+  }
+}
+</script>
+</body>
+</html>

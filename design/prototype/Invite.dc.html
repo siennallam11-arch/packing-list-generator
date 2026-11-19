@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Invite friends</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/caboodle/tokens.css">
+<link rel="stylesheet" href="ds/caboodle/components/bundle.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&amp;family=Gaegu:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#222020}a:hover{color:#6b6466}
+</style>
+</helmet>
+<svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false"><defs>
+<filter id="cb-wobble" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="3" result="n"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap></filter>
+<filter id="cb-paint" x="-6%" y="-10%" width="112%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="3" seed="7" result="edge"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="edge" scale="12" xChannelSelector="R" yChannelSelector="G" result="shape"></feDisplacementMap></filter>
+<symbol id="cb-people" viewBox="0 0 48 48"><g transform="translate(1.8 1.6)" style="fill: var(--df, #BFD9A6)"><circle cx="17" cy="17" r="6"></circle><circle cx="31" cy="17" r="6"></circle></g><g fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" filter="url(#cb-wobble)"><circle cx="17" cy="17" r="6"></circle><circle cx="31" cy="17" r="6"></circle><path d="M7 40c0-6.5 4.5-11 10-11s10 4.5 10 11"></path><path d="M27.5 30.5c1.1-.9 2.3-1.5 3.5-1.5 5.5 0 10 4.5 10 11"></path></g></symbol>
+</defs></svg>
+<div class="cb-stage" style="width: 390px; height: 844px; padding: 0; position: relative; overflow: hidden">
+  <div aria-hidden="true" style="opacity: .35">
+    <svg viewBox="0 0 390 104" preserveAspectRatio="none" style="width: 390px; height: 104px; display: block"><rect x="-10" y="-12" width="410" height="118" style="fill: var(--cover-strawberry)" filter="url(#cb-paint)"></rect></svg>
+    <p class="cb-trip-title" style="font-size: 38px; padding: 36px 20px 0">tokyo + kyoto</p>
+  </div>
+  <div style="position: absolute; inset: 0; background: rgba(34, 32, 32, .28)"></div>
+
+  <div role="dialog" aria-labelledby="inv-h" style="position: absolute; left: 0; right: 0; bottom: 0; background: var(--paper); border-radius: var(--radius-lg) var(--radius-lg) 0 0; box-shadow: var(--shadow-lift); padding: 22px 20px 28px; display: grid; gap: 16px">
+    <div style="display: flex; align-items: center; gap: 10px">
+      <svg style="width: 44px; height: 44px; color: var(--ink)" aria-hidden="true"><use href="#cb-people"></use></svg>
+      <h1 id="inv-h" style="margin: 0; font: 700 30px/1 var(--font-hand)">Invite your people</h1>
+    </div>
+    <p style="margin: 0; font: 400 14px/1.45 var(--font-type)">Anyone with this link can join <b>tokyo + kyoto</b>. They pick their name, answer the quick questions and get their own list.</p>
+
+    <div style="display: flex; gap: 8px; align-items: center; border: 1.6px solid var(--ink); border-radius: var(--radius-sm); padding: 6px 6px 6px 12px">
+      <span style="flex: 1; min-width: 0; font: 400 13px/1.3 var(--font-type); overflow: hidden; text-overflow: ellipsis; white-space: nowrap">caboodle.vercel.app/t/plum-fox-k7f2</span>
+      <button class="cb-btn" onClick="{{copy}}" style="padding: 9px 12px">{{copyLabel}}</button>
+    </div>
+
+    <div style="display: grid; gap: 6px; background: var(--paper-raised); border-radius: var(--radius-md); padding: 12px 14px">
+      <span class="cb-label">What friends can see</span>
+      <span style="font: 400 13px/1.45 var(--font-type)">Your packing progress, and the shared stuff (who's bringing the speaker, the hairdryer…).</span>
+      <span class="cb-label" style="margin-top: 6px">What they can't</span>
+      <span style="font: 400 13px/1.45 var(--font-type)">Your own list. Nobody sees what's in your bag or how many socks you're bringing.</span>
+    </div>
+
+    <p style="margin: 0; font: 400 16px/1.2 var(--font-hand); color: var(--pen)">only share it with people on the trip: anyone with the link can edit.</p>
+
+    <div style="display: flex; justify-content: space-between; align-items: center">
+      <a href="Checklist.dc.html" class="cb-caption" style="text-decoration: none">Done</a>
+      <a href="Join.dc.html" class="cb-btn cb-btn--quiet" style="text-decoration: none">See what Mia sees ›</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { copied: false };
+  }
+  renderVals() {
+    return {
+      copyLabel: this.state.copied ? 'Copied' : 'Copy link',
+      copy: () => this.setState({ copied: true }),
+    };
+  }
+}
+</script>
+</body>
+</html>

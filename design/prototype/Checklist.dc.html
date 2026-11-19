@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tokyo + Kyoto checklist</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="ds/caboodle/tokens.css">
+<link rel="stylesheet" href="ds/caboodle/components/bundle.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&amp;family=Gaegu:wght@400;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#222020}a:hover{color:#6b6466}
+</style>
+</helmet>
+<svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false"><defs>
+<filter id="cb-wobble" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="3" result="n"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap></filter>
+<filter id="cb-paint" x="-6%" y="-10%" width="112%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="3" seed="7" result="edge"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="edge" scale="12" xChannelSelector="R" yChannelSelector="G" result="shape"></feDisplacementMap><feTurbulence type="fractalNoise" baseFrequency="0.005 0.11" numOctaves="2" seed="4" result="streak"></feTurbulence><feColorMatrix in="streak" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.1 -0.56" result="light"></feColorMatrix><feComposite in="light" in2="shape" operator="in" result="lightIn"></feComposite><feMerge><feMergeNode in="shape"></feMergeNode><feMergeNode in="lightIn"></feMergeNode></feMerge></filter>
+<symbol id="cb-suitcase" viewBox="0 0 48 48"><g transform="translate(1.8 1.6)" style="fill: var(--df, #F6C4CA)"><rect x="5" y="16" width="38" height="25" rx="3"></rect></g><g fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" filter="url(#cb-wobble)"><rect x="5" y="16" width="38" height="25" rx="3"></rect><path d="M18 16v-5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v5"></path><path d="M14 16v25M34 16v25"></path><path d="M21 26.5l1.8 1.8 3.6-3.8"></path><circle cx="23.8" cy="27" r="4.6"></circle></g></symbol>
+<symbol id="cb-passport" viewBox="0 0 48 48"><g transform="translate(1.8 1.6)" style="fill: var(--df, #F6C4CA)"><rect x="11" y="7" width="25" height="34" rx="3"></rect></g><g fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" filter="url(#cb-wobble)"><path d="M13 7h20a3 3 0 0 1 3 3v28a3 3 0 0 1-3 3H13a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2z"></path><circle cx="23.5" cy="20" r="6"></circle><path d="M23.5 14c-3 3.5-3 8.5 0 12M23.5 14c3 3.5 3 8.5 0 12M17.5 20h12"></path><path d="M18 32h11M20 35.5h7"></path></g></symbol>
+<symbol id="cb-sock" viewBox="0 0 48 48"><g transform="translate(1.8 1.6)" style="fill: var(--df, #BFD9A6)"><path d="M17 5h13v19c0 2 1 3.4 3 5.4l5.6 5.6c3 3 1.8 7.8-2 8.8-2.2.6-4.3-.2-6-2L20 31.6c-2-2-3-4-3-7z"></path></g><g fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" filter="url(#cb-wobble)"><path d="M17 5h13v19c0 2 1 3.4 3 5.4l5.6 5.6c3 3 1.8 7.8-2 8.8-2.2.6-4.3-.2-6-2L20 31.6c-2-2-3-4-3-7z"></path><path d="M17 11h13M17 14.5h13M30.5 36.5l4.5-4.5"></path></g></symbol>
+<symbol id="cb-toothbrush" viewBox="0 0 48 48"><g transform="rotate(32 24 24)"><g transform="translate(1.8 1.6)" style="fill: var(--df, #CFE3F3)"><rect x="21.5" y="17" width="5" height="27" rx="2.5"></rect></g><g fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" filter="url(#cb-wobble)"><rect x="21.5" y="17" width="5" height="27" rx="2.5"></rect><path d="M24 17V5.5"></path><path d="M17 6h7M17 9.3h7M17 12.6h7M17 15.8h7"></path></g></g></symbol>
+<symbol id="cb-plug" viewBox="0 0 48 48"><g transform="translate(1.8 1.6)" style="fill: var(--df, #C5E8E4)"><path d="M14 17h20v8a10 10 0 0 1-20 0z"></path></g><g fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" filter="url(#cb-wobble)"><path d="M14 17h20v8a10 10 0 0 1-20 0z"></path><path d="M19 17V8M29 17V8"></path><path d="M24 35c0 4-3 5-6 6.5s-3.5 4-1 5"></path></g></symbol>
+<symbol id="cb-bottle" viewBox="0 0 48 48"><g transform="translate(1.8 1.6)" style="fill: var(--df, #CFE3F3)"><path d="M20 13h8v3.5c3.2 1.2 5 3.4 5 6.5v17a3 3 0 0 1-3 3H18a3 3 0 0 1-3-3V23c0-3.1 1.8-5.3 5-6.5z"></path></g><g fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" filter="url(#cb-wobble)"><path d="M20 13h8v3.5c3.2 1.2 5 3.4 5 6.5v17a3 3 0 0 1-3 3H18a3 3 0 0 1-3-3V23c0-3.1 1.8-5.3 5-6.5z"></path><rect x="19" y="5.5" width="10" height="7.5" rx="1.5"></rect><path d="M15 27h18M15 35h18"></path></g></symbol>
+<symbol id="cb-umbrella" viewBox="0 0 48 48"><g transform="translate(1.8 1.6)" style="fill: var(--df, #CFE3F3)"><path d="M5 24a19 16 0 0 1 38 0c-3.2-3-6.3-3-9.5 0-3.2-3-6.3-3-9.5 0-3.2-3-6.3-3-9.5 0-3.2-3-6.3-3-9.5 0z"></path></g><g fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" filter="url(#cb-wobble)"><path d="M5 24a19 16 0 0 1 38 0c-3.2-3-6.3-3-9.5 0-3.2-3-6.3-3-9.5 0-3.2-3-6.3-3-9.5 0-3.2-3-6.3-3-9.5 0z"></path><path d="M24 24v14a3 3 0 0 1-6 0M24 8V5"></path></g></symbol>
+<symbol id="cb-snow" viewBox="0 0 48 48"><g transform="translate(1.6 1.6)" style="fill: var(--df, #E4EEF6)"><circle cx="24" cy="24" r="13"></circle></g><g fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" filter="url(#cb-wobble)"><path d="M24 8v32M10.1 16l27.8 16M10.1 32l27.8-16"></path><path d="M20 11l4 4 4-4M20 37l4-4 4 4M11 21.5l5.5-1.5-1.5-5.5M37 26.5l-5.5 1.5 1.5 5.5M11 26.5l5.5 1.5-1.5 5.5M37 21.5l-5.5-1.5 1.5-5.5"></path></g></symbol>
+<symbol id="cb-people" viewBox="0 0 48 48"><g transform="translate(1.8 1.6)" style="fill: var(--df, #BFD9A6)"><circle cx="17" cy="17" r="6"></circle><circle cx="31" cy="17" r="6"></circle></g><g fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" filter="url(#cb-wobble)"><circle cx="17" cy="17" r="6"></circle><circle cx="31" cy="17" r="6"></circle><path d="M7 40c0-6.5 4.5-11 10-11s10 4.5 10 11"></path><path d="M27.5 30.5c1.1-.9 2.3-1.5 3.5-1.5 5.5 0 10 4.5 10 11"></path></g></symbol>
+</defs></svg>
+<div class="cb-stage" style="width: 390px; height: 844px; padding: 0; overflow-y: auto; overflow-x: hidden">
+  <div class="cb-cover">
+    <svg class="paint" viewBox="0 0 390 104" preserveAspectRatio="none" aria-hidden="true"><rect x="-10" y="-12" width="410" height="118" style="fill: var(--cover-strawberry)" filter="url(#cb-paint)"></rect></svg>
+    <a href="Main.dc.html" style="position: absolute; left: 16px; top: 14px; text-decoration: none; font: 700 13px/1 var(--font-type); color: var(--ink); background: var(--paper); border-radius: var(--radius-sm); padding: 7px 9px">‹ trips</a>
+    <a href="Invite.dc.html" style="position: absolute; right: 16px; top: 14px; text-decoration: none; font: 700 13px/1 var(--font-type); color: var(--on-ink); background: var(--ink); border-radius: var(--radius-sm); padding: 8px 11px">Invite</a>
+    <div class="badge"><svg aria-hidden="true"><use href="#cb-suitcase"></use></svg></div>
+  </div>
+
+  <div style="padding: 36px 20px 28px; display: grid; gap: 14px">
+    <div>
+      <p class="cb-trip-title" style="font-size: 38px">tokyo + kyoto</p>
+      <div class="cb-trip-meta">Dec 10 – Dec 15 · 5 nights · 6 days</div>
+    </div>
+
+    <div style="display: grid; gap: 10px">
+      <div class="cb-stop">
+        <div class="cb-stop-head"><svg aria-hidden="true"><use href="#cb-umbrella"></use></svg><span class="city">Tokyo</span><span class="when">Dec 10–13 · 36–55°F</span></div>
+        <p class="cb-blurb">Chilly, with highs around 52°F and lows near 39°F. Rain likely on one day, so keep an umbrella handy.</p>
+      </div>
+      <div class="cb-stop">
+        <div class="cb-stop-head"><svg aria-hidden="true"><use href="#cb-snow"></use></svg><span class="city">Kyoto</span><span class="when">Dec 13–15 · 30–50°F</span></div>
+        <p class="cb-blurb">Last year around these dates it was cold, with highs around 48°F and lows near 34°F. Looks dry.</p>
+      </div>
+    </div>
+
+    <div class="cb-progress"><div class="cb-bar"><i style="width: {{pct}}%"></i></div><span class="cb-count">{{countText}}</span></div>
+
+    <sc-for list="{{groups}}" as="g" hint-placeholder-count="5">
+      <div style="display: grid; gap: 2px; border-top: 1px solid var(--rule); padding-top: 10px">
+        <button class="{{g.headCls}}" aria-expanded="{{g.open}}" onClick="{{g.toggle}}">
+          <span class="tri">▼</span>
+          <svg class="cb-doodle" aria-hidden="true"><use href="{{g.icon}}"></use></svg>
+          <span><span class="h">{{g.title}}</span><svg class="u" viewBox="0 0 118 9" aria-hidden="true"><path d="M2 5C30 1.5 70 7.5 116 3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" filter="url(#cb-wobble)"></path></svg></span>
+          <span class="n">{{g.count}}</span>
+        </button>
+        <sc-if value="{{g.isOpen}}" hint-placeholder-val="{{ true }}">
+          <ul class="cb-items">
+            <sc-for list="{{g.items}}" as="it" hint-placeholder-count="4">
+              <li style="display: grid">
+                <div style="display: flex; align-items: center; gap: 6px">
+                  <button class="cb-item" aria-pressed="{{it.packed}}" onClick="{{it.toggle}}" style="flex: 1; min-height: 40px">
+                    <svg class="cb-box" viewBox="0 0 24 24" aria-hidden="true"><path class="edge" d="M5 6C9 4.6 15 5.2 19.4 5c.4 4-.2 9 .2 14-5.6.4-10.6-.2-15 .3.3-5.3.7-9.3.4-13.3z"></path><path class="tick" d="M6 12.5l4.5 4.5L21 3"></path></svg>
+                    <span class="name">{{it.name}}<sc-if value="{{it.hasNote}}" hint-placeholder-val="{{ false }}"><span class="cb-note">{{it.note}}</span></sc-if></span>
+                    <sc-if value="{{it.hasQty}}" hint-placeholder-val="{{ false }}"><span class="cb-lead"></span><span class="cb-qty">×{{it.qty}}</span></sc-if>
+                  </button>
+                  <sc-if value="{{it.hasWhy}}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{it.toggleWhy}}" aria-label="Why is {{it.name}} on the list?" style="background: none; border: 1.2px dashed var(--leader); border-radius: var(--radius-pill); width: 26px; height: 26px; font: 700 12px/1 var(--font-type); color: var(--ink-soft); cursor: pointer; flex: none">?</button>
+                  </sc-if>
+                </div>
+                <sc-if value="{{it.showWhy}}" hint-placeholder-val="{{ false }}">
+                  <p class="cb-why">because: {{it.why}}</p>
+                </sc-if>
+              </li>
+            </sc-for>
+          </ul>
+          <button class="cb-btn cb-btn--text" style="justify-self: start; color: var(--ink-soft); font-weight: 400">+ add an item</button>
+        </sc-if>
+      </div>
+    </sc-for>
+
+    <sc-if value="{{showSuggest}}" hint-placeholder-val="{{ true }}">
+      <div style="background: var(--paper-raised); border-radius: var(--radius-md); padding: 14px; display: grid; gap: 8px">
+        <span class="cb-label">From your past trips</span>
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">
+          <span style="flex: 1; min-width: 0">Kindle</span>
+          <button class="cb-claim" onClick="{{addKindle}}">Add it</button>
+          <button class="cb-btn cb-btn--text" onClick="{{dismissKindle}}" style="font-weight: 400; font-size: 12px">No thanks</button>
+        </div>
+        <span style="font: 400 17px/1.2 var(--font-hand); color: var(--pen)">you added this by hand on your last 3 trips.</span>
+      </div>
+    </sc-if>
+
+    <a href="Shared.dc.html" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); background: var(--paper-raised); border-radius: var(--radius-md); padding: 12px 14px">
+      <svg class="cb-doodle" aria-hidden="true"><use href="#cb-people"></use></svg>
+      <span style="display: grid; gap: 2px; flex: 1"><span style="font: 700 22px/1 var(--font-hand)">The shared stuff</span><span class="cb-caption">2 of 5 claimed · Mia and Jo are on this trip</span></span>
+      <span aria-hidden="true">›</span>
+    </a>
+
+    <a href="AllPacked.dc.html" class="cb-caption" style="justify-self: center; text-decoration: underline dotted; text-underline-offset: 4px">{{doneLink}}</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      packed: { passport: true, id: true, underwear: true, socks: true, tops: true, pajamas: true, phone: true },
+      closed: { toiletries: true, tech: true, odds: true },
+      why: {},
+      kindle: 'ask',
+    };
+  }
+  renderVals() {
+    const { packed, closed, why, kindle } = this.state;
+    const data = [
+      { id: 'documents', title: 'The documents', icon: '#cb-passport', items: [
+        ['passport', 'Passport', 1, "Check it's valid for 6+ months", 'you’re leaving the country'],
+        ['id', 'ID / driver’s license'], ['tickets', 'Tickets & boarding passes'],
+        ['insurance', 'Travel insurance details', 1, null, 'you’re leaving the country'],
+        ['cash', 'Some yen', 1, null, 'lots of places in Japan are cash only'] ] },
+      { id: 'clothes', title: 'The clothes', icon: '#cb-sock', items: [
+        ['tops', 'T-shirts / tops', 6], ['underwear', 'Underwear', 7], ['socks', 'Socks', 7], ['pants', 'Pants / jeans', 2],
+        ['pajamas', 'Pajamas'], ['sweater', 'Sweater / hoodie', 1, 'Planes are cold'],
+        ['coat', 'Warm coat', 1, null, 'Kyoto drops to 34°F at night'],
+        ['gloves', 'Gloves', 1, null, 'frosty mornings in Kyoto'],
+        ['dressy', 'Dressy outfit', 1, null, 'nights out'], ['shoes', 'Comfy walking shoes'],
+        ['workout', 'Workout outfits', 2, null, 'you said you’d work out'], ['sneakers', 'Workout sneakers'] ] },
+      { id: 'toiletries', title: 'The toiletries', icon: '#cb-toothbrush', items: [
+        ['toothbrush', 'Toothbrush'], ['deodorant', 'Deodorant'], ['skincare', 'Skincare'], ['meds', 'Medications'],
+        ['lipbalm', 'Lip balm', 1, null, 'cold, dry air in Kyoto'], ['glasses', 'Glasses / contacts', 1, 'If you wear them'] ] },
+      { id: 'tech', title: 'The tech', icon: '#cb-plug', items: [
+        ['phone', 'Phone charger'], ['powerbank', 'Power bank', 1, 'Carry-on bag, not checked'], ['headphones', 'Headphones'],
+        ['adapter', 'Travel adapter', 1, 'Japan uses type A plugs', 'you’re leaving the country'] ] },
+      { id: 'odds', title: 'The odds & ends', icon: '#cb-bottle', items: [
+        ['bottle', 'Reusable water bottle'], ['umbrella', 'Umbrella', 1, null, 'rain in Tokyo on Friday'],
+        ['laundry', 'Laundry bag'], ['snacks', 'Travel snacks'], ['book', 'Book / e-reader'] ] },
+    ];
+    if (kindle === 'added') data[4].items.push(['kindle', 'Kindle', 1, null, 'you added it on your last 3 trips']);
+    let total = 0, done = 0;
+    const groups = data.map((g) => {
+      const items = g.items.map(([id, name, qty = 1, note = null, whyText = null]) => {
+        total++; if (packed[id]) done++;
+        return {
+          name, qty, note,
+          hasQty: qty > 1, hasNote: !!note, hasWhy: !!whyText, why: whyText, showWhy: !!(whyText && why[id]),
+          packed: String(!!packed[id]),
+          toggle: () => this.setState({ packed: { ...this.state.packed, [id]: !this.state.packed[id] } }),
+          toggleWhy: () => this.setState({ why: { ...this.state.why, [id]: !this.state.why[id] } }),
+        };
+      });
+      const gDone = g.items.filter(([id]) => packed[id]).length;
+      const all = gDone === g.items.length;
+      const isOpen = !closed[g.id];
+      return {
+        title: g.title, icon: g.icon, items, isOpen, open: String(isOpen),
+        headCls: 'cb-ghead' + (all ? ' is-done' : ''),
+        count: all ? gDone + '/' + g.items.length + ' packed' : gDone + '/' + g.items.length,
+        toggle: () => this.setState({ closed: { ...this.state.closed, [g.id]: isOpen } }),
+      };
+    });
+    const pct = Math.round((done / total) * 100);
+    return {
+      groups, pct,
+      countText: done === total ? 'all packed!' : done + ' of ' + total + ' packed',
+      showSuggest: kindle === 'ask',
+      addKindle: () => this.setState({ kindle: 'added' }),
+      dismissKindle: () => this.setState({ kindle: 'no' }),
+      doneLink: done === total ? 'See the all-packed moment ›' : 'Prototype: skip to the all-packed moment ›',
+    };
+  }
+}
+</script>
+</body>
+</html>
