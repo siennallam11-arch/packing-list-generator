@@ -69,36 +69,36 @@ Example: 6 days, normal packer, no laundry → 6 tops, 7 underwear, 7 socks, 2 p
 | Item | Added when | How many | Notes |
 |---|---|---|---|
 | Toothbrush | Always | 1 |  |
-| Toothpaste | Always | 1 | Shared · Carry-on: travel size (100 ml or less) |
-| Deodorant | Always | 1 |  |
-| Shampoo & conditioner | Always | 1 | Shared · Carry-on: travel size (100 ml or less) |
-| Body wash | Always | 1 | Shared · Carry-on: travel size (100 ml or less) |
-| Skincare | Always | 1 | Carry-on: travel size (100 ml or less) |
+| Toothpaste | Always | 1 | Shared · Pink note: 3.4 fl oz or less in carry-ons |
+| Deodorant | Always | 1 | Pink note: Sticks are fine; gels and sprays 3.4 fl oz or less in carry-ons |
+| Shampoo & conditioner | Always | 1 | Shared · Pink note: 3.4 fl oz or less in carry-ons |
+| Body wash | Always | 1 | Shared · Pink note: 3.4 fl oz or less in carry-ons |
+| Skincare | Always | 1 | Pink note: 3.4 fl oz or less in carry-ons |
 | Hairbrush / comb | Always | 1 |  |
-| Razor | Always | 1 |  |
+| Razor | Always | 1 | Pink note: Loose blades aren't allowed in carry-ons; cartridge razors are fine |
 | Hairdryer | Always | 1 | Shared · Skip it if your stay has one |
-| Medications | Always | 1 |  |
+| Medications | Always | 1 | Pink note: Liquid medicine can go over 3.4 fl oz: tell security |
 | Painkillers | Always | 1 | Shared |
-| Glasses / contacts | Always | 1 | If you wear them |
-| Sunscreen | Warm days or Beach or Pool or Skiing / snowboarding or Hiking | 1 | Shared · Carry-on: travel size (100 ml or less) |
-| After-sun lotion | Beach | 1 | Shared · Overpackers only |
+| Glasses / contacts | Always | 1 | If you wear them · Pink note: Contact solution: 3.4 fl oz or less in carry-ons |
+| Sunscreen | Warm days or Beach or Pool or Skiing / snowboarding or Hiking | 1 | Shared · Pink note: 3.4 fl oz or less in carry-ons |
+| After-sun lotion | Beach | 1 | Shared · Overpackers only · Pink note: 3.4 fl oz or less in carry-ons |
 | Lip balm | Cold weather or Skiing / snowboarding | 1 |  |
-| Bug spray | Hiking or Camping | 1 | Shared · Carry-on: travel size (100 ml or less) |
-| First aid kit | Hiking or Camping | 1 | Shared |
-| Hand sanitizer | Always | 1 | Overpackers only |
+| Bug spray | Hiking or Camping | 1 | Shared · Pink note: 3.4 fl oz or less in carry-ons |
+| First aid kit | Hiking or Camping | 1 | Shared · Pink note: Scissors over 4 inches can't be carried on |
+| Hand sanitizer | Always | 1 | Overpackers only · Pink note: 3.4 fl oz or less in carry-ons |
 
 ## Tech
 
 | Item | Added when | How many | Notes |
 |---|---|---|---|
 | Phone charger | Always | 1 |  |
-| Power bank | Always | 1 |  |
+| Power bank | Always | 1 | Pink note: Can't go in checked bags |
 | Headphones | Always | 1 |  |
-| Laptop & charger | Working on the trip or Work meetings | 1 |  |
+| Laptop & charger | Working on the trip or Work meetings | 1 | Pink note: Spare laptop batteries can't go in checked bags |
 | Travel adapter | Leaving the country | 1 | Shared · Check the plug type |
 | Small power strip | Always | 1 | Shared · Overpackers only |
 | Portable speaker | Beach or Pool or Camping | 1 | Shared |
-| Headlamp / flashlight | Camping or Hiking | 1 |  |
+| Headlamp / flashlight | Camping or Hiking | 1 | Pink note: Spare lithium batteries can't go in checked bags |
 | Camera | Sightseeing | 1 | Overpackers only |
 
 ## Activity gear
@@ -115,7 +115,7 @@ Example: 6 days, normal packer, no laundry → 6 tops, 7 underwear, 7 socks, 2 p
 | Tent | Camping | 1 | Shared |
 | Sleeping bag | Camping | 1 |  |
 | Sleeping pad | Camping | 1 |  |
-| Camp stove & fuel | Camping | 1 | Shared |
+| Camp stove & fuel | Camping | 1 | Shared · Pink note: Fuel can't fly: buy it when you get there |
 | Lantern | Camping | 1 | Shared |
 | Cooler | Camping | 1 | Shared · Overpackers only |
 | Wedding gift & card | Wedding | 1 |  |

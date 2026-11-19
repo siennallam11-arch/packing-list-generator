@@ -101,7 +101,7 @@ export function refreshItems(trip: SavedTrip, newStops: SavedStop[], now: string
     }
     const s = suggested.find((x) => x.id === item.ruleId)!;
     const quantity = item.quantityEdited ? item.quantity : s.quantity;
-    return { ...item, quantity, suggestedQuantity: s.quantity, reasons: s.reasons, maybeNotNeeded: false, isNew: false };
+    return { ...item, quantity, suggestedQuantity: s.quantity, reasons: s.reasons, note: s.note, travelNote: s.travelNote, maybeNotNeeded: false, isNew: false };
   });
   for (const s of suggested) {
     if (byRule.has(s.id) || trip.removedRuleIds.includes(s.id)) continue;
@@ -112,6 +112,19 @@ export function refreshItems(trip: SavedTrip, newStops: SavedStop[], now: string
   const change: ChangeNote | undefined =
     added.length || maybeNot.length ? { at: now, why: describeWeatherChange(trip.stops, newStops), added, maybeNot } : trip.change;
   return { ...next, items, change, updatedAt: now };
+}
+
+/** Bring notes on rule items up to date (e.g. after the rules gained new reminders). */
+export function withLatestNotes(trip: SavedTrip): SavedTrip {
+  const byId = new Map(suggestedItems(trip).map((s) => [s.id, s]));
+  let changed = false;
+  const items = trip.items.map((item) => {
+    const s = item.ruleId ? byId.get(item.ruleId) : undefined;
+    if (!s || (s.note === item.note && s.travelNote === item.travelNote)) return item;
+    changed = true;
+    return { ...item, note: s.note, travelNote: s.travelNote };
+  });
+  return changed ? { ...trip, items } : trip;
 }
 
 /** Rules that exist (used to drop stale ids from old saved trips). */

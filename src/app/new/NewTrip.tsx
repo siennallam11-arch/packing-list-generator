@@ -135,7 +135,8 @@ function NewTripFlow({ params }: { params: URLSearchParams }) {
   const minDay = editing ? [today, ...drafts.map((d) => d.startDate ?? today)].sort()[0] : today;
 
   function goToQuiz() {
-    if (!editing) setQuiz((cur) => ({ ...cur, international: isInternational(drafts.map((d) => d.countryCode)) }));
+    // Your cities already answer "leaving the country?"
+    setQuiz((cur) => ({ ...cur, international: isInternational(drafts.map((d) => d.countryCode)) }));
     setQ(0);
     setStep("quiz");
   }
@@ -332,21 +333,24 @@ function NewTripFlow({ params }: { params: URLSearchParams }) {
                       </button>
                     ))}
                   </div>
-                  <button type="button" className="cb-btn cb-btn--text skip" onClick={() => setQ(q + 1)}>Skip</button>
                 </div>
               );
             })()
           ) : (
-            <>
-              <div className="stack" style={{ justifyItems: "start" }}>
-                <h1 className="h1" style={{ fontSize: 32 }}>That’s everything!</h1>
-                <span className="cb-caption">We’ll remember your answers for next time.</span>
-                <button type="button" className="cb-btn cb-btn--text" onClick={() => setQ(0)}>Change an answer</button>
-              </div>
-              <div className="bottom">
-                <button type="button" className="cb-btn" onClick={pack}>{editing ? "Update my list" : "Pack my bag"}</button>
-              </div>
-            </>
+            <div className="stack" style={{ justifyItems: "start" }}>
+              <h1 className="h1" style={{ fontSize: 32 }}>That’s everything!</h1>
+              <span className="cb-caption">We’ll remember your answers for next time.</span>
+            </div>
+          )}
+          <div className="quiz-nav">
+            <button type="button" className="arrow" aria-label="Previous question" disabled={q === 0} onClick={() => setQ(q - 1)}>←</button>
+            {q < QUIZ.length && <span className="cb-caption">tap an answer, or use the arrows</span>}
+            <button type="button" className="arrow" aria-label="Next question" disabled={q >= QUIZ.length} onClick={() => setQ(q + 1)}>→</button>
+          </div>
+          {q >= QUIZ.length && (
+            <div className="bottom">
+              <button type="button" className="cb-btn" onClick={pack}>{editing ? "Update my list" : "Pack my bag"}</button>
+            </div>
           )}
         </>
       )}

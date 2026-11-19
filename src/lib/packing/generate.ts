@@ -62,7 +62,7 @@ function buildItem(rule: Rule, trip: TripInput, days: number, weather: WeatherTa
   if (rule.unless?.some((c) => matches(c, trip, weather))) return null;
 
   const reasons = matched.map(reasonFor).filter((r): r is string => r !== null);
-  const note = trip.quiz.carryOnOnly && rule.carryOnNote ? rule.carryOnNote : rule.note;
+  const note = rule.note;
 
   return {
     id: rule.id,

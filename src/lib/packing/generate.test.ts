@@ -123,9 +123,9 @@ describe("generatePackingList", () => {
     expect(find(generatePackingList(trip({}, { packingStyle: "over" })), "spare-outfit")).toBeDefined();
   });
 
-  it("uses travel-size notes for carry-on only", () => {
-    expect(find(generatePackingList(trip()), "shampoo")?.note).toBeUndefined();
-    expect(find(generatePackingList(trip({}, { carryOnOnly: true })), "shampoo")?.note).toMatch(/100 ml/);
+  it("shows the liquid limit on liquid toiletries", () => {
+    expect(find(generatePackingList(trip()), "shampoo")?.travelNote).toBe("3.4 fl oz or less in carry-ons");
+    expect(find(generatePackingList(trip()), "toothbrush")?.travelNote).toBeUndefined();
   });
 
   it("marks group items as shareable", () => {
