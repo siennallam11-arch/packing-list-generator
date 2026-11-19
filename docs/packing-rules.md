@@ -83,7 +83,7 @@ Example: 6 days, normal packer, no laundry → 6 tops, 7 underwear, 7 socks, 2 p
 | Sunscreen | Warm days or Beach or Pool or Skiing / snowboarding or Hiking | 1 | Shared · Carry-on: travel size (100 ml or less) |
 | After-sun lotion | Beach | 1 | Shared · Overpackers only |
 | Lip balm | Cold weather or Skiing / snowboarding | 1 |  |
-| Bug spray | Hiking or Camping | 1 | Shared |
+| Bug spray | Hiking or Camping | 1 | Shared · Carry-on: travel size (100 ml or less) |
 | First aid kit | Hiking or Camping | 1 | Shared |
 | Hand sanitizer | Always | 1 | Overpackers only |
 
@@ -92,7 +92,7 @@ Example: 6 days, normal packer, no laundry → 6 tops, 7 underwear, 7 socks, 2 p
 | Item | Added when | How many | Notes |
 |---|---|---|---|
 | Phone charger | Always | 1 |  |
-| Power bank | Always | 1 | Carry-on bag, not checked |
+| Power bank | Always | 1 |  |
 | Headphones | Always | 1 |  |
 | Laptop & charger | Working on the trip or Work meetings | 1 |  |
 | Travel adapter | Leaving the country | 1 | Shared · Check the plug type |

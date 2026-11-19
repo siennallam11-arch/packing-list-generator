@@ -46,5 +46,15 @@ A running log of what we decided and why. Newest at the bottom.
   added silently.
 - Until sign-in exists, learning lives in one browser; sign-in later makes it follow you.
 
+## Version 1 extras (decided)
+- **Works offline** and installs to the home screen.
+- **"What changed" notes**: when a new forecast changes the list, new items are marked "new" and
+  items you may not need are marked (never silently removed), with a note explaining why.
+- **Spot doubles in a group** (version 2, with group trips).
+- **Destination facts** under each city: plugs, currency, cash tips. Home is assumed to be the US.
+- **Airline reminders** on specific items ("Can't go in checked bags"), without assigning bags.
+- **Undo** after removing, adding, renaming or changing quantities.
+- **Backup links** that carry the whole trip, until sign-in exists.
+
 ## Open questions
 - None right now.
