@@ -126,6 +126,8 @@ export interface PackingItem {
   /** How many to pack. The checklist only shows it when it's more than 1. */
   quantity: number;
   note?: string;
+  /** Airline/security reminder, e.g. "Can't go in checked bags". */
+  travelNote?: string;
   /** Could be shared by the group (hairdryer, speaker, sunscreen...). */
   shareable: boolean;
   /** Human-readable reasons this item is on the list, e.g. ["Skiing"]. */

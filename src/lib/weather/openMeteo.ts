@@ -13,6 +13,8 @@ export const FORECAST_HORIZON_DAYS = 15;
 export interface Place {
   name: string;
   country?: string;
+  /** ISO 3166-1 alpha-2, e.g. "JP" */
+  countryCode?: string;
   region?: string;
   latitude: number;
   longitude: number;
@@ -23,6 +25,7 @@ interface GeocodingResponse {
   results?: {
     name: string;
     country?: string;
+    country_code?: string;
     admin1?: string;
     latitude: number;
     longitude: number;
@@ -41,6 +44,7 @@ export async function searchPlaces(query: string, fetchFn: typeof fetch = fetch)
   return (data.results ?? []).map((r) => ({
     name: r.name,
     country: r.country,
+    countryCode: r.country_code?.toUpperCase(),
     region: r.admin1,
     latitude: r.latitude,
     longitude: r.longitude,

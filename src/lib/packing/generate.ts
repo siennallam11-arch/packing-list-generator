@@ -70,6 +70,7 @@ function buildItem(rule: Rule, trip: TripInput, days: number, weather: WeatherTa
     category: rule.category,
     quantity: resolveQuantity(rule.qty, trip, days),
     ...(note ? { note } : {}),
+    ...(rule.travelNote ? { travelNote: rule.travelNote } : {}),
     shareable: rule.shareable ?? false,
     reasons,
   };

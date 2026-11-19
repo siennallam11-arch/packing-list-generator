@@ -76,10 +76,10 @@ describe("getStopWeather", () => {
 describe("searchPlaces", () => {
   it("maps geocoding results", async () => {
     const fetchFn = vi.fn().mockResolvedValue(
-      jsonResponse({ results: [{ name: "Tokyo", country: "Japan", admin1: "Tokyo", latitude: 35.69, longitude: 139.69, timezone: "Asia/Tokyo" }] }),
+      jsonResponse({ results: [{ name: "Tokyo", country: "Japan", country_code: "JP", admin1: "Tokyo", latitude: 35.69, longitude: 139.69, timezone: "Asia/Tokyo" }] }),
     );
     expect(await searchPlaces("Tokyo", fetchFn)).toEqual([
-      { name: "Tokyo", country: "Japan", region: "Tokyo", latitude: 35.69, longitude: 139.69, timezone: "Asia/Tokyo" },
+      { name: "Tokyo", country: "Japan", countryCode: "JP", region: "Tokyo", latitude: 35.69, longitude: 139.69, timezone: "Asia/Tokyo" },
     ]);
     expect(await searchPlaces("T", fetchFn)).toEqual([]);
   });
