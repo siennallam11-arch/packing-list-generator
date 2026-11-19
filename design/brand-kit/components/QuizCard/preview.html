@@ -1,0 +1,14 @@
+<!-- @dsCard group="Start a trip" height=330 -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><filter id="cb-wobble" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/></filter><symbol id="cb-suitcase" viewBox="0 0 48 48"><g transform="translate(1.8 1.6)" style="fill:var(--df, #F6C4CA)"><rect x="5" y="16" width="38" height="25" rx="3"/></g><g fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" filter="url(#cb-wobble)"><rect x="5" y="16" width="38" height="25" rx="3"/><path d="M18 16v-5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v5"/><path d="M14 16v25M34 16v25"/><path d="M21 26.5l1.8 1.8 3.6-3.8"/><circle cx="23.8" cy="27" r="4.6"/></g></symbol></defs></svg>
+<div class="cb-stage"><div class="cb-quiz">
+<span class="step">Question 1 of 7</span>
+<p class="q"><svg class="cb-doodle" aria-hidden="true" style="--df: var(--fill-pink)"><use href="#cb-suitcase"/></svg>Do you overpack?</p>
+<div class="cb-opts">
+<button class="cb-opt" aria-pressed="false">I pack light</button>
+<button class="cb-opt" aria-pressed="true">Just right</button>
+<button class="cb-opt" aria-pressed="false">I bring everything, just in case</button>
+</div>
+<button class="cb-btn cb-btn--text skip">Skip</button>
+</div></div>
+<script>document.querySelectorAll('.cb-opt').forEach(function (o) { o.addEventListener('click', function () {
+ document.querySelectorAll('.cb-opt').forEach(function (x) { x.setAttribute('aria-pressed', String(x === o)); }); }); });</script>
