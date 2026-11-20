@@ -61,6 +61,7 @@ describe("renderBanner", () => {
     expect(night.svg).toContain('class="star"');
     expect(night.svg).toContain('class="moon"');
     expect(renderBanner({ ...base, weather: "rain" }).svg).toContain('class="rain"');
+    expect(renderBanner({ ...base, minutes: 1300, weather: "rain" }).svg).not.toContain('class="moon"');
     expect(renderBanner({ ...base, weather: "snow" }).svg).toContain('class="snow"');
   });
 

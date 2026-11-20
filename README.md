@@ -17,7 +17,8 @@ Version 1 works for your own trips, saved in your browser:
 - Backup links to move a trip to another device
 - Installs to your home screen and works offline
 
-Next: group trips (invites, shared items, who's bringing what), which needs a database (Supabase).
+- Group trips: invite friends with a link, a shared list with "I'll bring it", spotting doubles,
+  and everyone's progress, through Supabase (`supabase/schema.sql`); personal lists stay private
 
 ## Where things are
 
@@ -28,6 +29,9 @@ Next: group trips (invites, shared items, who's bringing what), which needs a da
 | `src/lib/packing/rules.ts` | **The packing rules.** Every item, when it's added, how many. Edit this to change lists. |
 | `src/lib/store/` | Saved trips: building and refreshing lists, learning, backups |
 | `src/lib/weather/` | City search, forecasts and the weather blurbs |
+| `src/lib/group/` | Group trips: talking to Supabase and keeping lists in step |
+| `src/lib/banner/` | The hand-drawn city banners and the live sky |
+| `supabase/schema.sql` | The database setup for group trips (paste into Supabase's SQL editor) |
 | `src/lib/places/facts.ts` | Plugs, currency and cash tips per country |
 | `public/sw.js` | Offline support |
 | `design/` | The brand kit and the clickable prototype |

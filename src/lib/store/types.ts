@@ -68,6 +68,12 @@ export interface SavedTrip {
   /** Suggestions from past trips you said no to. */
   dismissedSuggestions: string[];
   change?: ChangeNote;
+  /** Set when the trip is shared with friends. */
+  group?: { token: string; memberId: string; name: string };
+  /** Shareable items that moved to the group's shared list (not re-added to yours). */
+  sharedRuleIds?: string[];
+  /** Shared items you claimed and have packed (group item ids). */
+  sharedPacked?: string[];
   createdAt: string;
   updatedAt: string;
 }

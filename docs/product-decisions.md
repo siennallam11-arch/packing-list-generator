@@ -83,5 +83,19 @@ A running log of what we decided and why. Newest at the bottom.
   ("Tokyo · 8:25 am ›") switches between cities.
 - Cover colour choice removed (the banner replaces it). Home shows a small banner per trip.
 
+## Group trips (built)
+- Database: Supabase (`supabase/schema.sql`). Tables are locked; the app only calls functions
+  that need the trip's secret token (the random part of the invite link).
+- **Personal lists never leave the device.** Only names, packing progress (numbers) and the
+  shared items are stored online.
+- "Invite friends" asks for your name, then gives a link (`/join#…`). Friends pick their name
+  (or tap it if they joined on another phone), answer the quiz, and get their own list.
+- Shareable items (hairdryer, speaker, toiletries…) move from everyone's own list to one
+  **shared list**; the same item is only added once (**doubles are spotted**, by suggestion or name).
+- "I'll bring it" claims an item, and it then appears on your own list as "for everyone".
+  Short notes per item. Everyone's progress shows as percentages only.
+- Live updates via a broadcast channel named after the secret token, plus a check every 30 seconds.
+- Changing cities or dates updates everyone's trip. "Leave the group trip" puts shared items back.
+
 ## Open questions
 - None right now.
