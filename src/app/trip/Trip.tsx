@@ -19,6 +19,10 @@ import { deleteTrip, getTrip, hideItem, loadHidden, loadTrips, saveTrip, todayIs
 import type { SavedItem, SavedTrip } from "@/lib/store/types";
 import { refreshTripWeather } from "@/lib/store/weather";
 import { describeWeather, formatRange } from "@/lib/weather/describe";
+import { toggleSharedPacked } from "@/lib/group/sync";
+import { InviteSheet } from "./InviteSheet";
+import { SharedPanel } from "./SharedPanel";
+import { useGroup } from "./useGroup";
 
 const CATEGORY_DOODLES: Record<Category, { name: DoodleName; fill: string }> = {
   documents: { name: "passport", fill: "var(--fill-pink)" },
@@ -63,6 +67,7 @@ function TripView({ id }: { id: string }) {
   const [checking, setChecking] = useState(false);
   const [hidden, setHidden] = useState(loadHidden);
   const toastId = useRef(0);
+  const [invite, setInvite] = useState(false);
 
   const commit = useCallback((next: SavedTrip, toastText?: string, undoable = true) => {
     const prev = latest.current;
@@ -99,11 +104,13 @@ function TripView({ id }: { id: string }) {
     };
   }, [commit]);
 
+  const group = useGroup(trip, latest, commit);
+
   const learned = useMemo(() => learnFrom(loadTrips().filter((t) => t.id !== id)), [id]);
 
   // Celebrate when the last thing gets packed.
-  const packed = trip ? ops.packedCount(trip) : 0;
-  const total = trip?.items.length ?? 0;
+  const packed = trip ? (trip.group ? group.progress.packed : ops.packedCount(trip)) : 0;
+  const total = trip ? (trip.group ? group.progress.total : trip.items.length) : 0;
   const wasComplete = useRef(total > 0 && packed === total);
   useEffect(() => {
     const complete = total > 0 && packed === total;
@@ -172,7 +179,12 @@ function TripView({ id }: { id: string }) {
     setAdding({ ...adding, [category]: "" });
   }
 
-  const groups = CATEGORY_ORDER.map((category) => ({ category, items: trip.items.filter((i) => i.category === category) })).filter((g) => g.items.length > 0 || editing);
+  const sharedPacked = new Set(trip.sharedPacked ?? []);
+  const groups = CATEGORY_ORDER.map((category) => ({
+    category,
+    items: trip.items.filter((i) => i.category === category),
+    claimed: group.claims.filter((c) => c.category === category),
+  })).filter((g) => g.items.length > 0 || g.claimed.length > 0 || editing);
 
   return (
     <>
@@ -234,6 +246,9 @@ function TripView({ id }: { id: string }) {
           <button type="button" className="cb-btn cb-btn--quiet" style={{ minHeight: 36, padding: "8px 12px" }} onClick={() => setEditing(!editing)} aria-pressed={editing}>
             {editing ? "Done editing" : "Edit list"}
           </button>
+          <button type="button" className="cb-btn cb-btn--quiet" style={{ minHeight: 36, padding: "8px 12px" }} onClick={() => setInvite(true)}>
+            {trip.group ? "Invite more friends" : "Invite friends"}
+          </button>
         </div>
         {pastSuggestions.length > 0 && (
           <div className="past-suggest">
@@ -251,9 +266,10 @@ function TripView({ id }: { id: string }) {
         </header>
 
         <div className="groups">
-          {groups.map(({ category, items }, gi) => {
-            const done = items.filter((i) => i.packed).length;
-            const all = items.length > 0 && done === items.length;
+          {groups.map(({ category, items, claimed }, gi) => {
+            const done = items.filter((i) => i.packed).length + claimed.filter((c) => sharedPacked.has(c.id)).length;
+            const count = items.length + claimed.length;
+            const all = count > 0 && done === count;
             const isFolded = folded[category] ?? all;
             const d = CATEGORY_DOODLES[category];
             return (
@@ -265,7 +281,7 @@ function TripView({ id }: { id: string }) {
                     <span className="h">The {CATEGORY_LABELS[category].toLowerCase()}</span>
                     <svg className="u" viewBox="0 0 118 9" aria-hidden="true"><path d={SCRIBBLES[gi % 3]} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" filter="url(#cb-wobble)" /></svg>
                   </span>
-                  <span className="n">{all ? `${done}/${items.length} packed` : `${done}/${items.length}`}</span>
+                  <span className="n">{all ? `${done}/${count} packed` : `${done}/${count}`}</span>
                 </button>
 
                 {!isFolded && (
@@ -302,6 +318,16 @@ function TripView({ id }: { id: string }) {
                           </li>
                         ),
                       )}
+                      {claimed.map((c) => (
+                        <li key={c.id}>
+                          <div className="item-row">
+                            <button type="button" className="cb-item" aria-pressed={sharedPacked.has(c.id)} onClick={() => commit(toggleSharedPacked(trip, c.id))}>
+                              <Box />
+                              <span className="name">{c.name}<span className="tag shared">for everyone</span></span>
+                            </button>
+                          </div>
+                        </li>
+                      ))}
                     </ul>
                     <form className="add-row" onSubmit={(e) => { e.preventDefault(); addTo(category); }}>
                       <label className="visually-hidden" htmlFor={`add-${category}`}>Add to {CATEGORY_LABELS[category]}</label>
@@ -314,6 +340,19 @@ function TripView({ id }: { id: string }) {
             );
           })}
         </div>
+
+        {trip.group && (
+          <SharedPanel
+            data={group.data}
+            status={group.status}
+            memberId={group.memberId}
+            onClaim={group.claim}
+            onNote={group.note}
+            onRemove={group.remove}
+            onAdd={(name) => group.add(name, "extras")}
+            onInvite={() => setInvite(true)}
+          />
+        )}
 
         {hidden.length > 0 && (
           <div className="hidden-list">
@@ -346,6 +385,9 @@ function TripView({ id }: { id: string }) {
               </div>
             ) : <span className="cb-caption">{copied}</span>)}
             <span className="cb-caption">The backup link holds the whole trip. Open it on another phone or computer to bring the trip there.</span>
+            {trip.group && (
+              <button type="button" className="cb-btn cb-btn--text" style={{ justifySelf: "start" }} onClick={() => { group.leave(); setMenu(false); }}>Leave the group trip</button>
+            )}
             {confirmDelete ? (
               <div className="row">
                 <span className="grow cb-caption">Delete {tripTitle(trip.stops)} from this browser?</span>
@@ -367,6 +409,8 @@ function TripView({ id }: { id: string }) {
           <button type="button" className="cb-btn" onClick={() => setCelebrate(false)}>Back to my list</button>
         </div>
       )}
+
+      {invite && <InviteSheet trip={trip} onStart={group.start} onClose={() => setInvite(false)} />}
 
       <Toast toast={toast} onClose={() => setToast(null)} />
     </>

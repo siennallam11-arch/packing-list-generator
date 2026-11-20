@@ -108,7 +108,7 @@ export function refreshItems(trip: SavedTrip, newStops: SavedStop[], now: string
     return { ...item, quantity, suggestedQuantity: s.quantity, reasons: s.reasons, note: s.note, travelNote: s.travelNote, maybeNotNeeded: false, isNew: false };
   });
   for (const s of suggested) {
-    if (byRule.has(s.id) || trip.removedRuleIds.includes(s.id) || hidden.has(s.id)) continue;
+    if (byRule.has(s.id) || trip.removedRuleIds.includes(s.id) || hidden.has(s.id) || trip.sharedRuleIds?.includes(s.id)) continue;
     items.push({ ...fromSuggestion(s), isNew: true });
     added.push(s.name);
   }

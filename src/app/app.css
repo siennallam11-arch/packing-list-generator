@@ -217,3 +217,13 @@ a.cb-btn { display: inline-flex; }
   box-shadow: 0 0 0 1.4px var(--ink);
 }
 .cbn-chip:disabled { cursor: default; opacity: 1; }
+
+/* Group trips */
+.shared-panel { display: grid; gap: 12px; background: var(--paper-raised); border-radius: var(--radius-md); padding: 18px; max-width: 720px; }
+.shared-items { list-style: none; margin: 0; padding: 0; display: grid; }
+.shared-items li { border-bottom: 1px solid var(--rule); padding: 6px 0; display: grid; gap: 4px; }
+.shared-row { display: flex; align-items: center; gap: 8px; min-height: 40px; }
+.shared-note { margin: 0; font: 400 16px/1.2 var(--font-hand); color: var(--pen); }
+.cb-claimed.as-btn { background: none; border: 0; cursor: pointer; padding: 0; color: var(--ink); }
+.tag.shared { background: var(--fill-green); color: #222020; }
+.cb-claim:disabled, .icon-btn:disabled { opacity: 0.4; cursor: default; }

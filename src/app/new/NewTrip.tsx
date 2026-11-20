@@ -6,7 +6,7 @@ import { use, useEffect, useMemo, useRef, useState } from "react";
 import { browser } from "react-dom";
 import { Calendar, type Range } from "@/components/Calendar";
 import { Doodle } from "@/components/Doodle";
-import { fmtDay, fmtRange } from "@/lib/format";
+import { fmtDay, fmtRange, tripTitle } from "@/lib/format";
 import { daysBetween, formatTripLength, tripLength } from "@/lib/packing/trip";
 import { DEFAULT_QUIZ, type Activity, type QuizAnswers } from "@/lib/packing/types";
 import { isInternational } from "@/lib/places/facts";
@@ -16,6 +16,9 @@ import { learnFrom } from "@/lib/store/learning";
 import { getTrip, loadHidden, loadTrips, newTripId, saveTrip, todayIso } from "@/lib/store/storage";
 import type { SavedStop, SavedTrip } from "@/lib/store/types";
 import { withWeather } from "@/lib/store/weather";
+import { groupApi, toGroupStops } from "@/lib/group/api";
+import { shareMyItems } from "../trip/useGroup";
+import { JOIN_KEY, type PendingJoin } from "../join/JoinTrip";
 import { searchPlaces, type Place } from "@/lib/weather/openMeteo";
 
 type Step = "cities" | "activities" | "quiz" | "packing";
@@ -35,11 +38,22 @@ interface Draft {
   existing?: SavedStop;
 }
 
+function readJoin(): PendingJoin | undefined {
+  try {
+    const p = JSON.parse(sessionStorage.getItem(JOIN_KEY) ?? "null") as PendingJoin | null;
+    return p && p.token && p.memberId && Array.isArray(p.stops) && p.stops.length ? p : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 function initialState(params: URLSearchParams) {
+  const join = params.get("join") ? readJoin() : undefined;
   const editing = params.get("edit") ? getTrip(params.get("edit") as string) : undefined;
   if (editing) {
     return {
       editing,
+      join: undefined,
       query: "",
       drafts: editing.stops.map((s): Draft => ({ ...s, existing: s })),
       activities: editing.activities,
@@ -47,12 +61,22 @@ function initialState(params: URLSearchParams) {
     };
   }
   const last = loadTrips().sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0];
-  return { editing: undefined, query: params.get("q") ?? "", drafts: [] as Draft[], activities: [] as Activity[], quiz: last?.quiz ?? DEFAULT_QUIZ };
+  if (join) {
+    return {
+      editing: undefined,
+      join,
+      query: "",
+      drafts: join.stops.map((s): Draft => ({ ...s })),
+      activities: [] as Activity[],
+      quiz: last?.quiz ?? DEFAULT_QUIZ,
+    };
+  }
+  return { editing: undefined, join: undefined, query: params.get("q") ?? "", drafts: [] as Draft[], activities: [] as Activity[], quiz: last?.quiz ?? DEFAULT_QUIZ };
 }
 
 export function NewTrip() {
   const params = useSearchParams();
-  const key = `${params.get("edit") ?? ""}|${params.get("q") ?? ""}`;
+  const key = `${params.get("edit") ?? ""}|${params.get("q") ?? ""}|${params.get("join") ?? ""}`;
   return <NewTripFlow key={key} params={new URLSearchParams(params.toString())} />;
 }
 
@@ -60,10 +84,10 @@ function NewTripFlow({ params }: { params: URLSearchParams }) {
   use(browser("Trips are saved in this browser."));
   const router = useRouter();
   const [init] = useState(() => initialState(params));
-  const { editing } = init;
+  const { editing, join } = init;
   const today = todayIso();
 
-  const [step, setStep] = useState<Step>("cities");
+  const [step, setStep] = useState<Step>(join ? "activities" : "cities");
   const [query, setQuery] = useState(init.query);
   const [results, setResults] = useState<Place[]>([]);
   const [searchState, setSearchState] = useState<"idle" | "loading" | "error" | "none">("idle");
@@ -194,6 +218,18 @@ function NewTripFlow({ params }: { params: URLSearchParams }) {
         v: 1, id: newTripId(), cover: "strawberry", stops, activities, quiz, items, removedRuleIds,
         dismissedSuggestions: [], createdAt: now, updatedAt: now,
       };
+      if (join) {
+        trip = await shareMyItems({ ...trip, group: { token: join.token, memberId: join.memberId, name: join.name } });
+        try {
+          sessionStorage.removeItem(JOIN_KEY);
+        } catch {
+          // nothing to clean up
+        }
+      }
+    }
+    if (editing?.group) {
+      // Friends follow the new cities and dates.
+      groupApi.updateTrip(editing.group.token, tripTitle(stops), toGroupStops(stops)).catch(() => {});
     }
     saveTrip(trip);
     const wait = Math.max(0, 1200 - (Date.now() - started));
@@ -202,8 +238,8 @@ function NewTripFlow({ params }: { params: URLSearchParams }) {
 
   const stepNo = { cities: 1, activities: 2, quiz: 3, packing: 3 }[step];
   const back =
-    step === "cities" ? (
-      <Link className="back" href={editing ? `/trip?id=${editing.id}` : "/"}>‹ back</Link>
+    step === "cities" || (join && step === "activities") ? (
+      <Link className="back" href={join ? `/join#${join.token}` : editing ? `/trip?id=${editing.id}` : "/"}>‹ back</Link>
     ) : (
       <button type="button" className="back" style={{ background: "none", border: 0, cursor: "pointer" }} onClick={() => setStep(step === "quiz" ? "activities" : "cities")}>‹ back</button>
     );
